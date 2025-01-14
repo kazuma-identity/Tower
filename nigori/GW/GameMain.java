@@ -95,10 +95,12 @@ public class GameMain {
         }
         titleLabel.setForeground(Color.BLUE);
         // ラベル文字列の中央揃え
+        titleLabel.setOpaque(true);
+        titleLabel.setBackground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        // BoxLayout で中央に配置する場合は setAlignmentX が必要ですが、
-        // ここでは BorderLayout.NORTH に貼るだけなので不要
+        // タイトルラベルに白いラインボーダー (太さ 3px)
+        titleLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
         // タイトル用パネル (上部に余白を入れる)
         JPanel titlePanel = new JPanel();
@@ -116,7 +118,10 @@ public class GameMain {
 
         JLabel messageLabel = new JLabel("プレイヤー名を入力してください:");
         messageLabel.setForeground(Color.BLACK); // 文字色を設定
+        messageLabel.setOpaque(true);
+        messageLabel.setBackground(Color.WHITE);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
         messageLabel.setFont(new Font("Dialog", Font.BOLD, 32));
 
         centerPanel.add(Box.createVerticalStrut(100)); 
