@@ -93,6 +93,7 @@ public class MageUnit extends Unit {
     }
 
 
+    private int c = 0; // 最も近い敵が、ユニット:c=1、建物:c=2、城:c=0）
     @Override
     public void update(double deltaTime, Game game) {
         timeSinceLastAttack += deltaTime;
@@ -104,21 +105,25 @@ public class MageUnit extends Unit {
         if(isDead())
             active = false;
 
-        // 常に最寄りの敵とユニットを探す
-        targetUnit = findTargetUnit(game);
-        targetBuilding = findTargetBuilding(game);
+        // 現在のターゲットが城または非アクティブまたは攻撃範囲外の場合、再ターゲット
+        if (c == 1 && targetUnit.isActive() && canAttack(targetUnit.getX(), targetUnit.getY())) { }
+        else if (c == 2 && targetBuilding.isActive() && canAttack(targetBuilding.getX(), targetBuilding.getY())) { }
+        else {
+            // 常に最寄りの敵とユニットを探す
+            targetUnit = findTargetUnit(game);
+            targetBuilding = findTargetBuilding(game);
 
-        // 最も近い敵が、ユニット:c=1、建物:c=2、城:c=0）
-        int c = closestObject(targetUnit, targetBuilding, opponent.getCastle());
-        if(c == 0) {
-            targetX = opponent.getCastle().getX();
-            targetY = opponent.getCastle().getY();
-        } else if(c == 1) {
-            targetX = targetUnit.getX();
-            targetY = targetUnit.getY();   
-        } else {
-            targetX = targetBuilding.getX();
-            targetY = targetBuilding.getY();
+            c = closestObject(targetUnit, targetBuilding, opponent.getCastle());
+            if(c == 0) {
+                targetX = opponent.getCastle().getX();
+                targetY = opponent.getCastle().getY();
+            } else if(c == 1) {
+                targetX = targetUnit.getX();
+                targetY = targetUnit.getY();   
+            } else {
+                targetX = targetBuilding.getX();
+                targetY = targetBuilding.getY();
+            }
         }
         
         // ターゲットが攻撃範囲外の場合、移動
