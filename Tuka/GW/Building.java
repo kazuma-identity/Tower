@@ -48,7 +48,4 @@ public abstract class Building{
     // 更新と描画の抽象メソッド
     public abstract void update(double deltaTime, Game game);
     public abstract void draw(Graphics g, Image image);
-
-    public void levelUp() { level++; }
-
 }

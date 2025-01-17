@@ -6,30 +6,45 @@ import java.awt.Image;
 
 public class DefenseBuilding extends Building {
     private double attackRange = 150.0; // 攻撃範囲
-    private double attackPower = 50.0; // 攻撃力
+    private double attackPower; // 攻撃力
     private double attackCooldown = 1.5; // 攻撃間隔（秒）
-    private double timeSinceLastAttack = 0; // 最後の攻撃からの時間
+    private double timeSinceLastAttack; // 最後の攻撃からの時間
     private int size = 50; // 防衛設備のサイズ
     private Unit target = null; // 攻撃対象
 
     public DefenseBuilding(double x, double y, Player owner) {
         super(x, y, 150, 150.0, BuildingType.DEFENSE, owner);
+        this.attackPower = 50.0;
+        this.timeSinceLastAttack = 0;
     }
 
-    // 攻撃可能判定
-    
+    // レベルアップに必要なコスト
+    public int getLevelUpCost() {
+        if (this.level == 1)
+            return 150;
+        else if (this.level == 2)
+            return 200;
+        else
+            return -1; // 不明な値が入力された場合
+    }
 
-    // レベル処理
-    public void levelprc(int level) {
-        switch(level) {
+    // レベルアップ処理（HPと攻撃力が変化）
+    public void levelUp() {
+        switch (this.level) {
             case 1:
+                this.MaxHealth = 250.0;
+                this.health += 100.0; // 最大HPの増加に合わせて現在HPも増加
+                this.attackPower = 70.0;
+                this.level++;
                 break;
             case 2:
+                this.MaxHealth = 400.0;
+                this.health += 150.0;
+                this.attackPower = 100.0;
+                this.level++;
                 break;
-            case 3:
-                break;
-            case 4:
-                break;
+            default:
+                return;
         }
     }
 

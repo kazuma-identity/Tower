@@ -4,12 +4,41 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 
 public class ResourceBuilding extends Building {
-    protected int size = 50; // 資源設備のサイズ
-    private double addResourceRate; // 資源生成速度
+    private double addResourceRate; // 追加資源生成速度（秒）
 
     public ResourceBuilding(double x, double y, Player owner) {
         super(x, y, 100, 100, BuildingType.RESOURCE, owner);
-        this.addResourceRate = 5.0; // 資源生成速度（1秒あたりの資源生成量）
+        this.addResourceRate = 5.0;
+    }
+
+    // レベルアップに必要なコスト
+    public int getLevelUpCost() {
+        if (this.level == 1)
+            return 150;
+        else if (this.level == 2)
+            return 200;
+        else
+            return -1; // 不明な値が入力された場合
+    }
+
+    // レベルアップ処理（HPと追加資源生成速度が変化）
+    public void levelUp() {
+        switch (this.level) {
+            case 1:
+                this.MaxHealth = 150.0;
+                this.health += 50.0; // 最大HPの増加に合わせて現在HPも増加
+                this.addResourceRate = 10.0;
+                this.level++;
+                break;
+            case 2:
+                this.MaxHealth = 200.0;
+                this.health += 50.0;
+                this.addResourceRate = 30.0;
+                this.level++;
+                break;
+            default:
+                return;
+        }
     }
 
     @Override
