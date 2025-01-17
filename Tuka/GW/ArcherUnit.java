@@ -83,7 +83,10 @@ public class ArcherUnit extends Unit {
             active = false;
 
         // 常に最寄りの敵防衛設備を探す
-        target = findTargetDefenseBuilding(game);
+        // 現在のターゲットが非アクティブまたは存在しないまたは攻撃範囲外の場合、再ターゲット
+        if (target == null || !target.isActive() || !canAttack(target.getX(), target.getY())) {
+            target = findTargetDefenseBuilding(game);
+        }
 
         // ターゲットがいない場合、何もしない
         if (target == null)
