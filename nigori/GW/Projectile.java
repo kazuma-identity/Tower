@@ -1,5 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Color;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class Projectile {
     private double x, y;
@@ -13,6 +15,7 @@ public class Projectile {
     private int size = 10; // 弾のサイズ
     private Color color; // 弾の色
     private boolean active;
+    private Image image; // Archerユニットの弾の画像
 
     public Projectile(double x, double y, double speed, double attackPower, int size, Color color) {
         this.x = x;
@@ -22,6 +25,12 @@ public class Projectile {
         this.size = size;
         this.color = color;
         this.active = true;
+        this.image = null;
+    }
+
+    // 画像を設定するためのメソッド
+    public void setImages(String imagePath) {
+        this.image = new ImageIcon(imagePath).getImage();
     }
 
     // ゲッターとセッター
@@ -91,8 +100,13 @@ public class Projectile {
     public void draw(Graphics g) {
         if (!active)
             return;
-        // プロジェクタイルを小さな白い円として描画
-        g.setColor(color);
-        g.fillOval((int) x - size / 2, (int) y - size / 2, size, size);
+        if (image != null) {
+            // 画像を描画
+            g.drawImage(image, (int) x - size / 2, (int) y - size / 2, size, size, null);
+        } else {
+            // デフォルトの円描画
+            g.setColor(color);
+            g.fillOval((int) x - size / 2, (int) y - size / 2, size, size);
+        }
     }
 }
