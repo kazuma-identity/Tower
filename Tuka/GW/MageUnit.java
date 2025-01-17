@@ -3,24 +3,37 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 
-// MageUnit ターゲットは最寄りの敵オブジェクト、中距離攻撃
+// MageUnit ターゲットは最寄りの敵ユニット・建物・城、中距離攻撃
 public class MageUnit extends Unit {
     
     private double attackRange; // 攻撃範囲
     private double attackPower; // 攻撃力
-    private double attackCooldown;
+    private double attackCooldown; // 攻撃クールダウン時間
     private double timeSinceLastAttack;
     private double targetX, targetY;
-    private int size = 30; // ユニットのサイズ
     private Unit targetUnit;
     private Building targetBuilding;
+    private int c = 0; // 最も近い敵が、ユニット:c=1、建物:c=2、城:c=0）
 
     public MageUnit(double x, double y, Player owner) {
         super(x, y, 50.0, 100, 100.0, UnitType.MAGE, owner);
-        this.attackRange = 120;
-        this.attackPower = 50;
+        this.attackRange = 120; // 攻撃範囲（Lv.1）
+        this.attackPower = 50; // 攻撃力（Lv.1）
         this.attackCooldown = 1.0; // 攻撃間隔（秒）
         this.timeSinceLastAttack = 0;
+    }
+
+    public void nowLevel(int level) {
+        switch(level) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
     }
 
     // 与えられた座標が攻撃範囲内か判定
@@ -93,7 +106,6 @@ public class MageUnit extends Unit {
     }
 
 
-    private int c = 0; // 最も近い敵が、ユニット:c=1、建物:c=2、城:c=0）
     @Override
     public void update(double deltaTime, Game game) {
         timeSinceLastAttack += deltaTime;
@@ -105,25 +117,28 @@ public class MageUnit extends Unit {
         if(isDead())
             active = false;
 
-        // 現在のターゲットが城または非アクティブまたは攻撃範囲外の場合、再ターゲット
-        if (c == 1 && targetUnit.isActive() && canAttack(targetUnit.getX(), targetUnit.getY())) { }
+        // ユニットと建物と城の共通親クラスを作っておけばこんなことには……
+        // 現在のターゲットが非アクティブまたは攻撃範囲外の場合、再ターゲット
+        if (c == 0 && canAttack(opponent.getCastle().getX(), opponent.getCastle().getY())) { }
+        else if (c == 1 && targetUnit.isActive() && canAttack(targetUnit.getX(), targetUnit.getY())) { }
         else if (c == 2 && targetBuilding.isActive() && canAttack(targetBuilding.getX(), targetBuilding.getY())) { }
         else {
-            // 常に最寄りの敵とユニットを探す
+            // 最寄りの敵ユニットと敵建物を探す
             targetUnit = findTargetUnit(game);
             targetBuilding = findTargetBuilding(game);
+            c = closestObject(targetUnit, targetBuilding, opponent.getCastle()); // 最も近い敵が、ユニット:c=1、建物:c=2、城:c=0）
+        }
 
-            c = closestObject(targetUnit, targetBuilding, opponent.getCastle());
-            if(c == 0) {
-                targetX = opponent.getCastle().getX();
-                targetY = opponent.getCastle().getY();
-            } else if(c == 1) {
-                targetX = targetUnit.getX();
-                targetY = targetUnit.getY();   
-            } else {
-                targetX = targetBuilding.getX();
-                targetY = targetBuilding.getY();
-            }
+        // targetX, targetYを更新
+        if(c == 0) {
+            targetX = opponent.getCastle().getX();
+            targetY = opponent.getCastle().getY();
+        } else if(c == 1) {
+            targetX = targetUnit.getX();
+            targetY = targetUnit.getY();   
+        } else {
+            targetX = targetBuilding.getX();
+            targetY = targetBuilding.getY();
         }
         
         // ターゲットが攻撃範囲外の場合、移動
@@ -161,7 +176,7 @@ public class MageUnit extends Unit {
         if (!active) 
             return;
         
-        // 攻城ユニットの描画
+        // Mageユニットの描画
         g.drawImage(image, (int) x-15, (int) y-10, 24, 24, null);
 
         // HPバーの描画
