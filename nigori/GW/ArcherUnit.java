@@ -83,6 +83,7 @@ public class ArcherUnit extends Unit {
                 // プロジェクタイルを発射
                 Projectile p = new Projectile(x, y, 100, attackPower, 10, Color.YELLOW);
                 p.setTargetBuilding(target);
+                p.setImages("Playerarrow.png");
                 game.addProjectile(p);
                 timeSinceLastAttack = 0;
             }

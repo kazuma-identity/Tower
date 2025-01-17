@@ -23,8 +23,12 @@ public class GamePanel extends JPanel {
   private Image castleImage; // 城の画像
   private Image defensebuildingImage; // 攻城ユニットの画像
   private Image resourcebuildingImage; // 資源設備の画像
-  private Image siegeunitImage; // 攻城ユニットの画像
-  private Image defenseunitImage; // 防衛ユニットの画像
+  private Image PlayersiegeunitImage; // 攻城ユニットの画像
+  private Image BotsiegeunitImage; // 攻城ユニットの画像
+  private Image PlayerArcherunitImage; // Archerユニットの画像
+  private Image BotArcherunitImage; // Archerユニットの画像
+  private Image PlayerMageunitImage; // Mageユニットの画像
+  private Image BotMageunitImage; // Mageユニットの画像
 
 
   public GamePanel() {
@@ -35,8 +39,12 @@ public class GamePanel extends JPanel {
     castleImage = new ImageIcon("castle.png").getImage();
     defensebuildingImage = new ImageIcon("defensebuilding.png").getImage();
     resourcebuildingImage = new ImageIcon("resourcebuilding.png").getImage();
-    siegeunitImage = new ImageIcon("siege.png").getImage();
-    defenseunitImage = new ImageIcon("defenseunit.png").getImage();
+    PlayersiegeunitImage = new ImageIcon("Playersiegeunit.png").getImage();
+    BotsiegeunitImage = new ImageIcon("Botsiegeunit.png").getImage();
+    PlayerArcherunitImage = new ImageIcon("Playerarcherunit.png").getImage();
+    BotArcherunitImage = new ImageIcon("Botarcherunit.png").getImage();
+    PlayerMageunitImage = new ImageIcon("Playermageunit.png").getImage();
+    BotMageunitImage = new ImageIcon("Botmageunit.png").getImage();
 
     // SelectionPanelの追加
     SelectionPanel selectionPanel = new SelectionPanel(this);
@@ -224,9 +232,23 @@ public class GamePanel extends JPanel {
       for (Player p : game.getPlayers()) {
         for (Unit unit : p.getUnits()) {
           if (unit instanceof ArcherUnit) {
-            unit.draw(g, defenseunitImage);
+            if (p.getName().equals("Bot")) {
+              unit.draw(g, BotArcherunitImage);
+            } else {
+              unit.draw(g, PlayerArcherunitImage);
+            }
+          } else if (unit instanceof SiegeUnit) {
+            if (p.getName().equals("Bot")) {
+              unit.draw(g, BotsiegeunitImage);
+            } else {
+              unit.draw(g, PlayersiegeunitImage);
+            }
           } else {
-            unit.draw(g, siegeunitImage);
+            if (p.getName().equals("Bot")) {
+              unit.draw(g, BotMageunitImage);
+            } else {
+              unit.draw(g, PlayerMageunitImage);
+            }
           }
         }
       }
