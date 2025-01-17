@@ -6,20 +6,47 @@ import java.awt.Image;
 // ArcherUnit ターゲットは最寄りの敵防衛設備、超遠距離攻撃
 public class ArcherUnit extends Unit {
     
-    private double attackRange; // 攻撃範囲
+    private double attackRange = 300.0; // 攻撃範囲
     private double attackPower; // 攻撃力
-    private double attackCooldown;
+    private double attackCooldown = 3.0; // 攻撃間隔（秒）
     private double timeSinceLastAttack;
     private double targetX, targetY;
-    private int size = 30; // ユニットのサイズ
     private Building target;
 
-    public ArcherUnit(double x, double y, Player owner) {
-        super(x, y, 20.0, 50, 100.0, UnitType.MAGE, owner);
-        this.attackRange = 300;
-        this.attackPower = 30;
-        this.attackCooldown = 3.0; // 攻撃間隔（秒）
+    public ArcherUnit(double x, double y, Player owner, int level) {
+        super(x, y, 20.0, 50, 100.0, UnitType.MAGE, owner, level);
+        levelUp(level);
         this.timeSinceLastAttack = 0;
+    }
+
+    // レベルアップに必要なコスト
+    public int getLevelUpCost(int tolevel) {
+        if (tolevel == 2) 
+            return 250;
+        else if (tolevel == 3)
+            return 500;
+        else
+            return -1; // 不明な値が入力された場合
+    }
+
+    // レベルアップ処理（HPと攻撃力が変化）
+    public void levelUp(int level) {
+        switch (level) {
+            case 1:
+                this.MaxHealth = this.health = 100.0;
+                this.attackPower = 30.0;
+                break;
+            case 2:
+                this.MaxHealth = this.health = 150.0;
+                this.attackPower = 50.0;
+                break;
+            case 3:
+                this.MaxHealth = this.health = 300.0;
+                this.attackPower = 90.0;
+                break;
+            default:
+                return;
+        }
     }
 
     // 与えられた座標が攻撃範囲内か判定

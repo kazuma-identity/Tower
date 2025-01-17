@@ -13,7 +13,7 @@ public abstract class Unit {
     protected UnitType type;
     protected boolean active;
 
-    public Unit(double x, double y, double speed, int cost, double health, UnitType type, Player owner) {
+    public Unit(double x, double y, double speed, int cost, double health, UnitType type, Player owner, int level) {
         this.x = x;
         this.y = y;
         this.speed = speed;
@@ -23,6 +23,7 @@ public abstract class Unit {
         this.owner = owner;
         this.level = 1;
         this.active = true;
+        this.level = level;
     }
 
     // ゲッターとセッター

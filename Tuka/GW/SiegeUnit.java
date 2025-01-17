@@ -6,19 +6,46 @@ import java.awt.Image;
 public class SiegeUnit extends Unit {
 
     private double attackPower; // 攻撃力
-    private double attackCooldown; // 攻撃間隔（秒）
+    private double attackCooldown = 5.0; // 攻撃間隔（秒）
     private double timeSinceLastAttack;
     private double targetX, targetY;
-    private int size = 30; // ユニットのサイズ
 
-    public SiegeUnit(double x, double y, Player owner) {
-        super(x, y, 50.0, 100, 300.0, UnitType.SIEGE, owner);
-        this.attackPower = 50;
-        this.attackCooldown = 5.0;
+    public SiegeUnit(double x, double y, Player owner, int level) {
+        super(x, y, 50.0, 100, 300.0, UnitType.SIEGE, owner, level);
+        levelUp(level);
         this.timeSinceLastAttack = 0;
-        this.targetX = x; // 初期ターゲットは相手の城
-        this.targetY = y;        
     }
+
+    // レベルアップに必要なコスト
+    public int getLevelUpCost(int tolevel) {
+        if (tolevel == 2) 
+            return 300;
+        else if (tolevel == 3)
+            return 500;
+        else
+            return -1; // 不明な値が入力された場合
+    }
+
+    // レベルアップ処理（HPと攻撃力が変化）
+    public void levelUp(int level) {
+        switch (level) {
+            case 1:
+                this.MaxHealth = this.health = 300.0;
+                this.attackPower = 50.0;
+                break;
+            case 2:
+                this.MaxHealth = this.health = 400.0;
+                this.attackPower = 70.0;
+                break;
+            case 3:
+                this.MaxHealth = this.health = 700.0;
+                this.attackPower = 90.0;
+                break;
+            default:
+                return;
+        }
+    }
+
 
     @Override
     public void update(double deltaTime, Game game) {
