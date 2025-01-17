@@ -168,11 +168,11 @@ public class GamePanel extends JPanel {
       player.spendResources(cost);
       Unit unit;
       if (type == UnitType.MAGE) {
-        unit = new MageUnit(x, y, player);
+        unit = new MageUnit(x, y, player, 1);
       } else if(type == UnitType.SIEGE) {
-        unit = new SiegeUnit(x, y, player);
+        unit = new SiegeUnit(x, y, player, 1);
       } else {
-        unit = new ArcherUnit(x, y, player);
+        unit = new ArcherUnit(x, y, player, 1);
       }
       player.addUnit(unit);
       game.addUnit(unit);

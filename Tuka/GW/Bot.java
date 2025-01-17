@@ -43,7 +43,7 @@ public class Bot {
         if (botPlayer.getResources() >= 100) { // 攻城ユニットのコスト
             double x = botPlayer.getCastle().getX();
             double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50; // 城周辺に配置
-            SiegeUnit siegeUnit = new SiegeUnit(x, y, botPlayer);
+            SiegeUnit siegeUnit = new SiegeUnit(x, y, botPlayer, 1);
             botPlayer.addUnit(siegeUnit);
             game.addUnit(siegeUnit);
             botPlayer.spendResources(100);
@@ -53,7 +53,7 @@ public class Bot {
         if (botPlayer.getResources() >= 50) { // 防衛ユニットのコスト
             double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
             double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
-            MageUnit mageUnit = new MageUnit(x, y, botPlayer);
+            MageUnit mageUnit = new MageUnit(x, y, botPlayer, 1);
             botPlayer.addUnit(mageUnit);
             game.addUnit(mageUnit);
             botPlayer.spendResources(100);
@@ -63,7 +63,7 @@ public class Bot {
         if (botPlayer.getResources() >= 50) { // 防衛ユニットのコスト
             double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
             double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
-            ArcherUnit archerUnit = new ArcherUnit(x, y, botPlayer);
+            ArcherUnit archerUnit = new ArcherUnit(x, y, botPlayer, 1);
             botPlayer.addUnit(archerUnit);
             game.addUnit(archerUnit);
             botPlayer.spendResources(50);
