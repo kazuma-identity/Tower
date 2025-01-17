@@ -5,7 +5,6 @@ import java.awt.Image;
 public abstract class Unit {
     protected double x, y;
     protected double speed;
-    protected double MaxHealth; // 最大HP
     protected double health; // 現在のHP
     protected int level;
     protected int cost;
@@ -18,7 +17,7 @@ public abstract class Unit {
         this.y = y;
         this.speed = speed;
         this.cost = cost;
-        this.MaxHealth = this.health = health;
+        this.health = health;
         this.type = type;
         this.owner = owner;
         this.level = 1;

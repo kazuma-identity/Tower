@@ -17,15 +17,19 @@ public class MageUnit extends Unit {
 
     public MageUnit(double x, double y, Player owner) {
         super(x, y, 50.0, 100, 100.0, UnitType.MAGE, owner);
-        this.attackRange = 120; // 攻撃範囲（Lv.1）
-        this.attackPower = 50; // 攻撃力（Lv.1）
+        this.attackRange = 120.0; // 攻撃範囲（Lv.1）
+        this.attackPower = 50.0; // 攻撃力（Lv.1）
         this.attackCooldown = 1.0; // 攻撃間隔（秒）
         this.timeSinceLastAttack = 0;
     }
 
-    public void nowLevel(int level) {
+    public void levelUp(int level) {
         switch(level) {
             case 1:
+                this.health = 100.0;
+                this.attackRange = 140.0;
+                this.attackPower = 50.0;
+                this.attackCooldown = 0.8;
                 break;
             case 2:
                 break;
@@ -33,6 +37,8 @@ public class MageUnit extends Unit {
                 break;
             case 4:
                 break;
+            default:
+                return;
         }
     }
 
