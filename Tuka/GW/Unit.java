@@ -21,7 +21,7 @@ public abstract class Unit {
         this.MaxHealth = this.health = health;
         this.type = type;
         this.owner = owner;
-        this.level = 1;
+        this.level = level;
         this.active = true;
         this.level = level;
     }

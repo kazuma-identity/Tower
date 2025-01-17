@@ -17,6 +17,7 @@ public class MageUnit extends Unit {
 
     public MageUnit(double x, double y, Player owner, int level) {
         super(x, y, 50.0, 100, 100.0, UnitType.MAGE, owner, level);
+        // ユニットは種類ごとにレベルアップ（個々のユニットについてレベル処理はしない）
         levelUp(level);
         this.timeSinceLastAttack = 0;
     }

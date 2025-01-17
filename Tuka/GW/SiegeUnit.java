@@ -12,6 +12,7 @@ public class SiegeUnit extends Unit {
 
     public SiegeUnit(double x, double y, Player owner, int level) {
         super(x, y, 50.0, 100, 300.0, UnitType.SIEGE, owner, level);
+        // ユニットは種類ごとにレベルアップ（個々のユニットについてレベル処理はしない）
         levelUp(level);
         this.timeSinceLastAttack = 0;
     }
