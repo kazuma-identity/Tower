@@ -30,7 +30,6 @@ public class GamePanel extends JPanel {
   private Image PlayerMageunitImage; // Mageユニットの画像
   private Image BotMageunitImage; // Mageユニットの画像
   private Image TerritoryImage; // 領土の画像
-  private Image NeutralTerritoryImage; // 中立領土の画像
 
 
   public GamePanel() {
@@ -47,8 +46,7 @@ public class GamePanel extends JPanel {
     BotArcherunitImage = new ImageIcon("Botarcherunit.png").getImage();
     PlayerMageunitImage = new ImageIcon("Playermageunit.png").getImage();
     BotMageunitImage = new ImageIcon("Botmageunit.png").getImage();
-    TerritoryImage = new ImageIcon("Territory.jpg").getImage();
-    NeutralTerritoryImage = new ImageIcon("NeutralTerritory.png").getImage();
+    TerritoryImage = new ImageIcon("Territory.png").getImage();
 
     // SelectionPanelの追加
     SelectionPanel selectionPanel = new SelectionPanel(this);
@@ -213,9 +211,7 @@ public class GamePanel extends JPanel {
     if (game != null) {
       // 各陣地の背景の描画
       g.setColor(new Color(200, 200, 200));
-      g.drawImage(NeutralTerritoryImage, 0, 0, 1000, 600, null);
-      g.drawImage(TerritoryImage, 0, 0, 400, 600, null);
-      g.drawImage(TerritoryImage, 600, 0, 400, 600, null);
+      g.drawImage(TerritoryImage, 0, 0, 1000, 600, null);
 
       for (Player p : game.getPlayers()) {
         if (p.getName().equals("Bot")) {
