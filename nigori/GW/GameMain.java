@@ -2,91 +2,101 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class GameMain {
-  private static Font customFont = null;
+    public static Font customFont = null;
 
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> {
-      loadCustomFont();
-      // プレイヤー名入力用のカスタムダイアログ
-      String playerName = showCustomInputDialog();
-      if (playerName == null || playerName.trim().isEmpty()) {
-        System.exit(0);
-      }
+    // ウィンドウを再利用するため static で持つ
+    public static JFrame frame;
 
-      // プレイヤーとボットの作成
-      Player player = new Player(playerName, 100.0);
-      Castle playerCastle = new Castle(100, 300, 1000.0);
-      player.setCastle(playerCastle);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            loadCustomFont();
+            startGame();
+        });
+    }
 
-      Player bot = new Player("Bot", 100.0);
-      Castle botCastle = new Castle(900, 300, 1000.0);
-      bot.setCastle(botCastle);
+    /**
+     * ゲームを初期化して開始するメソッド。
+     * ここを再度呼び出すことで「リトライ」時に新しいゲームを始められます。
+     */
+    public static void startGame() {
+        // プレイヤー名入力用のカスタムダイアログ
+        String playerName = showCustomInputDialog();
+        // 何も入力されなかったら終了
+        if (playerName == null || playerName.trim().isEmpty()) {
+            System.exit(0);
+        }
 
-      // ゲームの初期化
-      Game game = new Game();
-      game.setPlayers(player, bot);
+        // プレイヤーとボットの作成
+        Player player = new Player(playerName, 100.0);
+        Castle playerCastle = new Castle(100, 300, 1000.0);
+        player.setCastle(playerCastle);
 
-      // ゲームパネルの作成
-      GamePanel gamePanel = new GamePanel();
-      gamePanel.setGame(game);
-      game.setGamePanel(gamePanel);
+        Player bot = new Player("Bot", 100.0);
+        Castle botCastle = new Castle(900, 300, 1000.0);
+        bot.setCastle(botCastle);
 
-      // ボットの作成と開始
-      Bot botAI = new Bot(game, bot, player);
-      botAI.start();
+        // ゲームの初期化
+        Game game = new Game();
+        game.setPlayers(player, bot);
 
-      // JFrameの設定
-      JFrame frame = new JFrame("対戦型タワーディフェンスゲーム");
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      frame.add(gamePanel);
-      frame.setSize(1000, 600);
-      frame.setLocationRelativeTo(null);
-      frame.setResizable(false);
-      frame.setVisible(true);
-    });
-  }
+        // ゲームパネルの作成
+        GamePanel gamePanel = new GamePanel();
+        gamePanel.setGame(game);
+        game.setGamePanel(gamePanel);
 
-  private static void loadCustomFont() {
-    try {
+        // ボットの作成と開始
+        Bot botAI = new Bot(game, bot, player);
+        botAI.start();
+
+        // JFrameの設定
+        frame = new JFrame("対戦型タワーディフェンスゲーム");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(gamePanel);
+        frame.setSize(1000, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+        frame.setVisible(true);
+    }
+
+    private static void loadCustomFont() {
+        try {
             File fontFile = new File("Battle Tough.otf");
             Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-
             // フォントサイズ等を変更
             customFont = baseFont.deriveFont(24f);
 
-            // GraphicsEnvironment に登録 (実際は登録しなくても使えますが、
-            // ラベルや他のコンポーネントで使う場合に便利)
+            // GraphicsEnvironment に登録 (任意)
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
 
-    } catch (/*FontFormatException |*/ IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            // 読み込みに失敗した場合、fallbackフォントを設定 (任意)
+            // 読み込みに失敗した場合、fallbackフォントを設定
             customFont = new Font("SansSerif", Font.PLAIN, 18);
-    } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            // その他例外も catch しておく
             customFont = new Font("SansSerif", Font.PLAIN, 18);
+        }
     }
-  }
 
+    /**
+     * プレイヤー名入力用のカスタムダイアログ
+     */
     private static String showCustomInputDialog() {
         // ダイアログの作成
         JDialog dialog = new JDialog((Frame) null, "Tower Defense Game", true);
         dialog.setSize(1000, 600);
         dialog.setLocationRelativeTo(null);
 
-        // === 1) 背景用のパネルを用意し、ダイアログの contentPane にする ===
-        ImageIcon bgIcon = new ImageIcon("TitleBackground.jpg"); // 背景画像ファイル (例)
+        // === 背景用のパネルを用意し、ダイアログの contentPane にする ===
+        ImageIcon bgIcon = new ImageIcon("TitleBackground.jpg"); // 背景画像ファイル
         BackgroundPanel backgroundPanel = new BackgroundPanel(bgIcon.getImage());
-        // 背景パネルに BorderLayout を設定し、そこへ全コンポーネントを配置していく
         backgroundPanel.setLayout(new BorderLayout());
         dialog.setContentPane(backgroundPanel);
 
-        // === 2) タイトル部分 ===
+        // === タイトル部分 ===
         JLabel titleLabel = new JLabel("TOWER DEFENSE GAME");
         if (customFont != null) {
             titleLabel.setFont(customFont.deriveFont(Font.BOLD, 64f));
@@ -94,37 +104,34 @@ public class GameMain {
             titleLabel.setFont(new Font("Dialog", Font.BOLD, 20));
         }
         titleLabel.setForeground(Color.BLUE);
-        // ラベル文字列の中央揃え
         titleLabel.setOpaque(true);
         titleLabel.setBackground(Color.WHITE);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        // タイトルラベルに白いラインボーダー (太さ 3px)
         titleLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
-        // タイトル用パネル (上部に余白を入れる)
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.setOpaque(false); // 背景を透過して、後ろの画像が見えるように
-        titlePanel.add(Box.createVerticalStrut(130)); // 上部余白
+        titlePanel.setOpaque(false);
+        titlePanel.add(Box.createVerticalStrut(130)); 
         titlePanel.add(titleLabel);
         titlePanel.add(Box.createVerticalStrut(10));
         backgroundPanel.add(titlePanel, BorderLayout.NORTH);
 
-        // === 3) 中央の入力パネル ===
+        // === 中央の入力パネル ===
         JPanel centerPanel = new JPanel();
-        centerPanel.setOpaque(false); // 背景透過
+        centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         JLabel messageLabel = new JLabel("プレイヤー名を入力してください:");
-        messageLabel.setForeground(Color.BLACK); // 文字色を設定
+        messageLabel.setForeground(Color.BLACK);
         messageLabel.setOpaque(true);
         messageLabel.setBackground(Color.WHITE);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
         messageLabel.setFont(new Font("Dialog", Font.BOLD, 32));
 
-        centerPanel.add(Box.createVerticalStrut(100)); 
+        centerPanel.add(Box.createVerticalStrut(100));
         centerPanel.add(messageLabel);
         centerPanel.add(Box.createVerticalStrut(10));
 
@@ -135,24 +142,24 @@ public class GameMain {
 
         backgroundPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // === 4) 下部のボタンパネル ===
+        // === 下部のボタンパネル ===
         JButton okButton = new JButton("スタート");
         JButton cancelButton = new JButton("ゲーム終了");
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setOpaque(false); // 背景透過
+        buttonPanel.setOpaque(false);
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
 
-        // ボタンパネルをさらに BoxLayout で包んで下部余白を作成
+        // ボタンパネルをさらに BoxLayout で包んで下部余白
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setOpaque(false); 
+        bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         bottomPanel.add(buttonPanel);
         bottomPanel.add(Box.createVerticalStrut(20));
         backgroundPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        // === 5) ボタン動作 ===
+        // ボタン動作
         final String[] result = { null };
         okButton.addActionListener(e -> {
             result[0] = textField.getText().trim();
@@ -163,7 +170,6 @@ public class GameMain {
             dialog.dispose();
         });
 
-        // === ダイアログの表示 ===
         dialog.setVisible(true);
         return result[0];
     }
@@ -173,11 +179,9 @@ public class GameMain {
      */
     static class BackgroundPanel extends JPanel {
         private Image backgroundImage;
-
         public BackgroundPanel(Image image) {
             this.backgroundImage = image;
         }
-
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -185,5 +189,4 @@ public class GameMain {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
-
 }

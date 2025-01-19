@@ -1,16 +1,10 @@
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 
 public class GamePanel extends JPanel {
   private Game game;
@@ -298,7 +292,68 @@ public class GamePanel extends JPanel {
   }
 
   public void showGameOver(String winner) {
-    JOptionPane.showMessageDialog(this, "ゲーム終了！勝者: " + winner);
-    System.exit(0);
+      // (1) ゲームループやBotスレッドを停止 (必要ならここで行う)
+      if (gameTimer != null) {
+          gameTimer.stop();
+      }
+
+      // (2) 表示する文字を winner で切り替える
+      String message;
+      if ("Bot".equals(winner)) {
+          message = "GAME OVER";
+      } else {
+          message = "VICTORY";
+      }
+
+      // (3) カスタムパネルを作って、そこにラベルを載せる
+      JPanel panel = new JPanel();
+      panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+      panel.setOpaque(true);
+      panel.setBackground(Color.WHITE);
+
+      // ラベルを作る
+      JLabel msgLabel = new JLabel(message, SwingConstants.CENTER);
+      msgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+      // GameMain で読み込んだカスタムフォントを取得して、サイズ調整
+      Font baseFont = GameMain.customFont; 
+      // もし static でなくゲッターにしているなら: Font baseFont = GameMain.getCustomFont();
+
+      if (baseFont != null) {
+          msgLabel.setFont(baseFont.deriveFont(Font.BOLD, 72f));
+      } else {
+          // フォント読み込み失敗時はフォールバック
+          msgLabel.setFont(new Font("SansSerif", Font.BOLD, 60));
+      }
+      msgLabel.setForeground(Color.RED);
+
+      // ラベルをパネルに追加
+      panel.add(Box.createVerticalStrut(20));
+      panel.add(msgLabel);
+      panel.add(Box.createVerticalStrut(20));
+
+      // (4) JOptionPane で「リトライ」「終了」のオプションを付けて表示
+      Object[] options = {"リトライ", "終了"};
+      int choice = JOptionPane.showOptionDialog(
+          this,
+          panel,              // カスタムパネルをメッセージ部に指定
+          "ゲーム終了",        // タイトル
+          JOptionPane.YES_NO_OPTION,
+          JOptionPane.PLAIN_MESSAGE,
+          null,
+          options,
+          null
+      );
+
+      if (choice == JOptionPane.YES_OPTION) {
+          // リトライ
+          // 古いウィンドウを閉じて新しいゲームを開始
+          GameMain.frame.dispose();
+          GameMain.startGame();
+      } else {
+          // 終了
+          System.exit(0);
+      }
   }
+
 }

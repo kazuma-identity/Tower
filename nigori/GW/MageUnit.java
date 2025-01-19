@@ -137,7 +137,7 @@ public class MageUnit extends Unit {
         } else  {
             if (timeSinceLastAttack >= attackCooldown) {
                 // プロジェクタイルを発射
-                Projectile p = new Projectile(x, y, 300, attackPower, 10, Color.GREEN);
+                Projectile p = new Projectile(x, y, 300, attackPower, 10, Color.MAGENTA);
                 if(c == 0) {
                     p.setTargetCastle(opponent.getCastle());
                 } else if(c == 1) {
