@@ -30,11 +30,11 @@ public class GameMain {
 
         // プレイヤーとボットの作成
         Player player = new Player(playerName, 100.0);
-        Castle playerCastle = new Castle(100, 300, 1000.0);
+        Castle playerCastle = new Castle(100, 400, 1000.0);
         player.setCastle(playerCastle);
 
         Player bot = new Player("Bot", 100.0);
-        Castle botCastle = new Castle(900, 300, 1000.0);
+        Castle botCastle = new Castle(900, 400, 1000.0);
         bot.setCastle(botCastle);
 
         // ゲームの初期化
@@ -54,7 +54,7 @@ public class GameMain {
         frame = new JFrame("対戦型タワーディフェンスゲーム");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(gamePanel);
-        frame.setSize(1000, 600);
+        frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
@@ -87,7 +87,7 @@ public class GameMain {
     private static String showCustomInputDialog() {
         // ダイアログの作成
         JDialog dialog = new JDialog((Frame) null, "Tower Defense Game", true);
-        dialog.setSize(1000, 600);
+        dialog.setSize(1000, 700);
         dialog.setLocationRelativeTo(null);
 
         // === 背景用のパネルを用意し、ダイアログの contentPane にする ===
