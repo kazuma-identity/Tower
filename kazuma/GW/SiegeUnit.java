@@ -15,12 +15,12 @@ public class SiegeUnit extends Unit {
         super(x, y, 50.0, 100, 300.0, UnitType.SIEGE, owner, level);
         // ユニットは種類ごとにレベルアップ（個々のユニットについてレベル処理はしない）
         levelUp(level);
-        this.timeSinceLastAttack = 0;  
+        this.timeSinceLastAttack = 0;
     }
 
     // レベルアップに必要なコスト
     public int getLevelUpCost(int tolevel) {
-        if (tolevel == 2) 
+        if (tolevel == 2)
             return 300;
         else if (tolevel == 3)
             return 500;
@@ -29,22 +29,23 @@ public class SiegeUnit extends Unit {
     }
 
     // レベルアップ処理（HPと攻撃力が変化）
-    public void levelUp(int level) {
-        switch (level) {
-            case 1:
-                this.MaxHealth = this.health = 300.0;
-                this.attackPower = 50.0;
-                break;
-            case 2:
-                this.MaxHealth = this.health = 400.0;
-                this.attackPower = 70.0;
-                break;
-            case 3:
-                this.MaxHealth = this.health = 700.0;
-                this.attackPower = 90.0;
-                break;
-            default:
-                return;
+    public void levelUp(int targetLevel) {
+        // 既に targetLevel 以上のレベルであれば何もしない
+        if (targetLevel <= this.level) {
+            return;
+        }
+
+        // 現在のレベルが targetLevel に達するまで繰り返す
+        while (this.level < targetLevel) {
+            this.level++;
+
+            // レベルが1上がるごとに HPを+100, 攻撃力を+20
+            this.MaxHealth += 100;
+            this.attackPower += 20;
+
+            System.out.println("ユニットがレベル " + this.level
+                    + " に上がりました！ HP: " + this.MaxHealth
+                    + ", 攻撃力: " + this.attackPower);
         }
     }
 
@@ -53,15 +54,15 @@ public class SiegeUnit extends Unit {
         timeSinceLastAttack += deltaTime;
 
         // 死亡時の処理
-        if(isDead())
+        if (isDead())
             active = false;
-        
+
         // 相手の城に向かって移動
         Player owner = game.getUnitOwner(this);
         Player opponent;
         if (owner == game.getPlayer()) {
             opponent = game.getBot();
-        } else if(owner == game.getBot()) {
+        } else if (owner == game.getBot()) {
             opponent = game.getPlayer();
         } else {
             return;
@@ -93,8 +94,10 @@ public class SiegeUnit extends Unit {
 
     @Override
     public void draw(Graphics g, Image image) {
-        if (!active) { return; }
-        g.drawImage(image, (int) x-15, (int) y-10, 24, 24, null);
+        if (!active) {
+            return;
+        }
+        g.drawImage(image, (int) x - 15, (int) y - 10, 24, 24, null);
 
         // HPバーの描画
         g.setColor(Color.RED);

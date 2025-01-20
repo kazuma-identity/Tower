@@ -5,7 +5,7 @@ import java.awt.Image;
 
 // ArcherUnit ターゲットは最寄りの敵防衛設備、超遠距離攻撃
 public class ArcherUnit extends Unit {
-    
+
     private double attackRange = 300.0; // 攻撃範囲
     private double attackPower; // 攻撃力
     private double attackCooldown = 3.0;
@@ -23,31 +23,28 @@ public class ArcherUnit extends Unit {
 
     // レベルアップに必要なコスト
     public int getLevelUpCost(int tolevel) {
-        if (tolevel == 2) 
-            return 250;
-        else if (tolevel == 3)
-            return 500;
-        else
-            return -1; // 不明な値が入力された場合
+        return -1; // 不明な値が入力された場合
     }
 
     // レベルアップ処理（HPと攻撃力が変化）
-    public void levelUp(int level) {
-        switch (level) {
-            case 1:
-                this.MaxHealth = this.health = 100.0;
-                this.attackPower = 30.0;
-                break;
-            case 2:
-                this.MaxHealth = this.health = 150.0;
-                this.attackPower = 50.0;
-                break;
-            case 3:
-                this.MaxHealth = this.health = 300.0;
-                this.attackPower = 90.0;
-                break;
-            default:
-                return;
+    public void levelUp(int targetLevel) {
+        // 既に targetLevel 以上のレベルであれば何もしない
+        if (targetLevel <= this.level) {
+            return;
+        }
+
+        // 現在のレベルが targetLevel に達するまで繰り返す
+        while (this.level < targetLevel) {
+            this.level++;
+
+            // レベルが1上がるごとに HPを+100, 攻撃力を+20
+            this.MaxHealth += 100;
+            this.health = this.MaxHealth; // レベルアップ時に全回復する場合はこうする
+            this.attackPower += 20;
+
+            System.out.println("ユニットがレベル " + this.level
+                    + " に上がりました！ HP: " + this.MaxHealth
+                    + ", 攻撃力: " + this.attackPower);
         }
     }
 
@@ -63,9 +60,10 @@ public class ArcherUnit extends Unit {
         Building closestBuilding = null;
         double closestDistance = Double.MAX_VALUE;
 
-        for (Building building: game.getBuildings()) {
+        for (Building building : game.getBuildings()) {
             // 建物がアクティブかつ敵の建物かつ防衛設備の場合
-            if (building.isActive() && building.getOwner() != this.getOwner() && building.getType() == BuildingType.DEFENSE) {
+            if (building.isActive() && building.getOwner() != this.getOwner()
+                    && building.getType() == BuildingType.DEFENSE) {
                 double distance = Math.hypot(building.getX() - this.x, building.getY() - this.y);
                 if (distance < closestDistance) {
                     closestBuilding = building;
@@ -81,7 +79,7 @@ public class ArcherUnit extends Unit {
         timeSinceLastAttack += deltaTime;
 
         // 死亡時の処理
-        if(isDead())
+        if (isDead())
             active = false;
 
         // 常に最寄りの敵防衛設備を探す
@@ -93,10 +91,10 @@ public class ArcherUnit extends Unit {
         // ターゲットがいない場合、何もしない
         if (target == null)
             return;
-        
+
         targetX = target.getX();
         targetY = target.getY();
-        
+
         // ターゲットが攻撃範囲外の場合、移動
         if (!canAttack(targetX, targetY)) {
             double dx = targetX - x;
@@ -109,8 +107,8 @@ public class ArcherUnit extends Unit {
                 this.x = targetX;
                 this.y = targetY;
             }
-        // ターゲットが攻撃範囲内の場合、攻撃
-        } else  {
+            // ターゲットが攻撃範囲内の場合、攻撃
+        } else {
             if (timeSinceLastAttack >= attackCooldown) {
                 // プロジェクタイルを発射
                 Projectile p = new Projectile(x, y, 100, attackPower, 10, Color.YELLOW);
@@ -124,11 +122,11 @@ public class ArcherUnit extends Unit {
 
     @Override
     public void draw(Graphics g, Image image) {
-        if (!active) 
+        if (!active)
             return;
-        
+
         // 攻城ユニットの描画
-        g.drawImage(image, (int) x-15, (int) y-10, 24, 24, null);
+        g.drawImage(image, (int) x - 15, (int) y - 10, 24, 24, null);
 
         // HPバーの描画
         g.setColor(Color.RED);

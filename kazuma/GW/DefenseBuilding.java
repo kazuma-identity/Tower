@@ -13,35 +13,26 @@ public class DefenseBuilding extends Building {
     private Unit target = null; // 攻撃対象
 
     public DefenseBuilding(double x, double y, Player owner) {
-        super(x, y, 150, 150.0, BuildingType.DEFENSE, owner);
-        this.attackPower = 50.0;
+        super(x, y, 100, 400.0, BuildingType.DEFENSE, owner);
+        this.attackPower = 1;
         this.timeSinceLastAttack = 0;
     }
 
     // レベルアップに必要なコスト
     public int getLevelUpCost() {
-        if (this.level == 1)
-            return 150;
-        else if (this.level == 2)
-            return 200;
-        else
-            return -1; // 不明な値が入力された場合
+        return -1;
     }
 
-    // レベルアップ処理（HPと攻撃力が変化）
+    // レベルアップ処理（HPが変化）
     @Override
-    public void levelUp(int level) {
-        if (level > this.level) {
-            while (this.level < level) {
+    public void levelUp(int targetLevel) {
+        if (targetLevel > this.level) {
+            while (this.level < targetLevel) {
                 this.level++;
-                // レベルアップごとの処理
-                if (this.level == 2) {
-                    this.MaxHealth = 200;
-                    this.health += 50; // 最大HPに合わせて現在HPを増加
-                } else if (this.level == 3) {
-                    this.MaxHealth = 300;
-                    this.health += 100;
-                }
+                // 一律の計算式
+                this.MaxHealth += 200;
+                this.health += 100;
+                System.out.println("Buildingレベルが " + this.level + " になりました");
             }
         }
     }

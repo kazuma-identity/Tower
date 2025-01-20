@@ -5,9 +5,9 @@ import java.awt.Image;
 
 // MageUnit ターゲットは最寄りの敵オブジェクト、中距離攻撃
 public class MageUnit extends Unit {
-    
+
     private double attackRange = 120.0; // 攻撃範囲
-    private double attackPower; // 攻撃力
+    private double attackPower = 20; // 攻撃力
     private double attackCooldown = 1.0;
     private double timeSinceLastAttack;
     private double targetX, targetY;
@@ -25,31 +25,23 @@ public class MageUnit extends Unit {
 
     // レベルアップに必要なコスト
     public int getLevelUpCost(int tolevel) {
-        if (tolevel == 2) 
-            return 300;
-        else if (tolevel == 3)
-            return 500;
-        else
-            return -1; // 不明な値が入力された場合
+        return -1; // 不明な値が入力された場合
     }
 
     // レベルアップ処理（HPと攻撃力が変化）
-    public void levelUp(int level) {
-        switch (level) {
-            case 1:
-                this.MaxHealth = this.health = 100.0;
-                this.attackPower = 50.0;
-                break;
-            case 2:
-                this.MaxHealth = this.health = 200.0;
-                this.attackPower = 70.0;
-                break;
-            case 3:
-                this.MaxHealth = this.health = 500.0;
-                this.attackPower = 100.0;
-                break;
-            default:
-                return;
+    public void levelUp(int targetLevel) {
+        // 既に targetLevel 以上のレベルであれば何もしない
+        if (targetLevel <= this.level) {
+            return;
+        }
+        while (this.level < targetLevel) {
+            this.level++;
+            this.MaxHealth += 100;
+            this.attackPower += 20;
+
+            System.out.println("ユニットがレベル " + this.level
+                    + " に上がりました！ HP: " + this.MaxHealth
+                    + ", 攻撃力: " + this.attackPower);
         }
     }
 
@@ -59,7 +51,7 @@ public class MageUnit extends Unit {
         double dy = targetY - this.y;
         return dx * dx + dy * dy <= attackRange * attackRange;
     }
-    
+
     // 最も近い敵ユニットを探す
     private Unit findTargetUnit(Game game) {
         Unit closestUnit = null;
@@ -83,7 +75,7 @@ public class MageUnit extends Unit {
         Building closestBuilding = null;
         double closestDistance = Double.MAX_VALUE;
 
-        for (Building building: game.getBuildings()) {
+        for (Building building : game.getBuildings()) {
             // 建物がアクティブかつ敵の建物の場合
             if (building.isActive() && building.getOwner() != this.getOwner()) {
                 double distance = Math.hypot(building.getX() - this.x, building.getY() - this.y);
@@ -98,23 +90,25 @@ public class MageUnit extends Unit {
 
     // 最も近い敵はユニットか建物か城かの判定（ユニット:1、建物:2、城:0）
     private int closestObject(Unit unit, Building building, Castle castle) {
-        if(unit == null && building == null) { return 0; }
+        if (unit == null && building == null) {
+            return 0;
+        }
 
-        double unitX = (unit==null) ? Double.MAX_VALUE : unit.getX() - this.x;
-        double unitY = (unit==null) ? Double.MAX_VALUE : unit.getY() - this.y;
-        double buildingX = (building==null) ? Double.MAX_VALUE : building.getX() - this.x;
-        double buildingY = (building==null) ? Double.MAX_VALUE : building.getY() - this.y;
+        double unitX = (unit == null) ? Double.MAX_VALUE : unit.getX() - this.x;
+        double unitY = (unit == null) ? Double.MAX_VALUE : unit.getY() - this.y;
+        double buildingX = (building == null) ? Double.MAX_VALUE : building.getX() - this.x;
+        double buildingY = (building == null) ? Double.MAX_VALUE : building.getY() - this.y;
         double castleX = castle.getX() - this.x;
         double castleY = castle.getY() - this.y;
 
-        if(castleX*castleX + castleY*castleY < unitX*unitX + unitY*unitY) {
-            if(castleX*castleX + castleY*castleY < buildingX*buildingX + buildingY*buildingY) {
+        if (castleX * castleX + castleY * castleY < unitX * unitX + unitY * unitY) {
+            if (castleX * castleX + castleY * castleY < buildingX * buildingX + buildingY * buildingY) {
                 return 0;
             } else {
                 return 2;
             }
         } else {
-            if(unitX*unitX + unitY*unitY < buildingX*buildingX + buildingY*buildingY) {
+            if (unitX * unitX + unitY * unitY < buildingX * buildingX + buildingY * buildingY) {
                 return 1;
             } else {
                 return 2;
@@ -122,24 +116,23 @@ public class MageUnit extends Unit {
         }
     }
 
-
     @Override
     public void update(double deltaTime, Game game) {
         timeSinceLastAttack += deltaTime;
-        
+
         Player owner = game.getUnitOwner(this);
         Player opponent = game.getOpponent(owner);
 
         // 死亡時の処理
-        if(isDead())
+        if (isDead())
             active = false;
 
         // 常に最寄りの敵とユニットを探す
         // 現在のターゲットが非アクティブまたは攻撃範囲外の場合、再ターゲット
-        if (c == 0 && canAttack(opponent.getCastle().getX(), opponent.getCastle().getY())) { }
-        else if (c == 1 && targetUnit.isActive() && canAttack(targetUnit.getX(), targetUnit.getY())) { }
-        else if (c == 2 && targetBuilding.isActive() && canAttack(targetBuilding.getX(), targetBuilding.getY())) { }
-        else {
+        if (c == 0 && canAttack(opponent.getCastle().getX(), opponent.getCastle().getY())) {
+        } else if (c == 1 && targetUnit.isActive() && canAttack(targetUnit.getX(), targetUnit.getY())) {
+        } else if (c == 2 && targetBuilding.isActive() && canAttack(targetBuilding.getX(), targetBuilding.getY())) {
+        } else {
             // 最寄りの敵ユニットと敵建物を探す
             targetUnit = findTargetUnit(game);
             targetBuilding = findTargetBuilding(game);
@@ -147,17 +140,17 @@ public class MageUnit extends Unit {
         }
 
         // 最も近い敵が、ユニット:c=1、建物:c=2、城:c=0）
-        if(c == 0) {
+        if (c == 0) {
             targetX = opponent.getCastle().getX();
             targetY = opponent.getCastle().getY();
-        } else if(c == 1) {
+        } else if (c == 1) {
             targetX = targetUnit.getX();
-            targetY = targetUnit.getY();   
+            targetY = targetUnit.getY();
         } else {
             targetX = targetBuilding.getX();
             targetY = targetBuilding.getY();
         }
-        
+
         // ターゲットが攻撃範囲外の場合、移動
         if (!canAttack(targetX, targetY)) {
             double dx = targetX - x;
@@ -170,14 +163,14 @@ public class MageUnit extends Unit {
                 this.x = targetX;
                 this.y = targetY;
             }
-        // ターゲットが攻撃範囲内の場合、攻撃
-        } else  {
+            // ターゲットが攻撃範囲内の場合、攻撃
+        } else {
             if (timeSinceLastAttack >= attackCooldown) {
                 // プロジェクタイルを発射
                 Projectile p = new Projectile(x, y, 300, attackPower, 10, Color.MAGENTA);
-                if(c == 0) {
+                if (c == 0) {
                     p.setTargetCastle(opponent.getCastle());
-                } else if(c == 1) {
+                } else if (c == 1) {
                     p.setTargetUnit(targetUnit);
                 } else {
                     p.setTargetBuilding(targetBuilding);
@@ -190,11 +183,11 @@ public class MageUnit extends Unit {
 
     @Override
     public void draw(Graphics g, Image image) {
-        if (!active) 
+        if (!active)
             return;
-        
+
         // 攻城ユニットの描画
-        g.drawImage(image, (int) x-15, (int) y-10, 24, 24, null);
+        g.drawImage(image, (int) x - 15, (int) y - 10, 24, 24, null);
 
         // HPバーの描画
         g.setColor(Color.RED);

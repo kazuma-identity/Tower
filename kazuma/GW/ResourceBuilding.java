@@ -8,33 +8,24 @@ public class ResourceBuilding extends Building {
     private double addResourceRate; // 資源生成速度
 
     public ResourceBuilding(double x, double y, Player owner) {
-        super(x, y, 100, 100, BuildingType.RESOURCE, owner);
-        this.addResourceRate = 5.0; // 資源生成速度（1秒あたりの資源生成量）
+        super(x, y, 100, 200, BuildingType.RESOURCE, owner);
+        this.addResourceRate = 10.0; // 資源生成速度（1秒あたりの資源生成量）
     }
 
     // レベルアップに必要なコスト
     public int getLevelUpCost() {
-        if (this.level == 1)
-            return 150;
-        else if (this.level == 2)
-            return 200;
-        else
-            return -1; // 不明な値が入力された場合
+        return -1;
     }
 
     @Override
-    public void levelUp(int level) {
-        if (level > this.level) {
-            while (this.level < level) {
+    public void levelUp(int targetLevel) {
+        if (targetLevel > this.level) {
+            while (this.level < targetLevel) {
                 this.level++;
-                // レベルアップごとの処理
-                if (this.level == 2) {
-                    this.MaxHealth = 200;
-                    this.health += 50; // 最大HPに合わせて現在HPを増加
-                } else if (this.level == 3) {
-                    this.MaxHealth = 300;
-                    this.health += 100;
-                }
+                // 一律の計算式
+                this.MaxHealth += 200;
+                this.health += 100;
+                System.out.println("Buildingレベルが " + this.level + " になりました");
             }
         }
     }
