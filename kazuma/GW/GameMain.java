@@ -178,10 +178,6 @@ public class GameMain {
         difficultyPanel.add(normalButton);
         difficultyPanel.add(hardButton);
 
-        centerPanel.add(Box.createVerticalStrut(20));
-        centerPanel.add(new JLabel("難易度を選択してください:"));
-        centerPanel.add(difficultyPanel);
-
         backgroundPanel.add(centerPanel, BorderLayout.CENTER);
 
         // 下部のボタン
