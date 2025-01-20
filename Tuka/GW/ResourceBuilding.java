@@ -41,6 +41,7 @@ public class ResourceBuilding extends Building {
         }
     }
 
+    
     @Override
     public void update(double deltaTime, Game game) {
 

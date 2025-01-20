@@ -73,6 +73,7 @@ public class DefenseBuilding extends Building {
         return closestUnit;
     }
 
+    
     @Override
     public void update(double deltaTime, Game game) {
         timeSinceLastAttack += deltaTime;
