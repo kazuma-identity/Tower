@@ -21,9 +21,14 @@ public class GameMain {
      * ここを再度呼び出すことで「リトライ」時に新しいゲームを始められます。
      */
     public static void startGame() {
+        // 難易度選択
+        Difficulty difficulty = selectDifficulty();
+        if (difficulty == null) {
+            System.exit(0); // 選択されなかった場合、ゲームを終了
+        }
+
         // プレイヤー名入力用のカスタムダイアログ
         String playerName = showCustomInputDialog();
-        // 何も入力されなかったら終了
         if (playerName == null || playerName.trim().isEmpty()) {
             System.exit(0);
         }
@@ -33,13 +38,13 @@ public class GameMain {
         Castle playerCastle = new Castle(100, 400, 1000.0);
         player.setCastle(playerCastle);
 
-        Player bot = new Player("Bot", 100.0);
+        Player botPlayer = new Player("Bot", 100.0);
         Castle botCastle = new Castle(900, 400, 1000.0);
-        bot.setCastle(botCastle);
+        botPlayer.setCastle(botCastle);
 
         // ゲームの初期化
         Game game = new Game();
-        game.setPlayers(player, bot);
+        game.setPlayers(player, botPlayer);
 
         // ゲームパネルの作成
         GamePanel gamePanel = new GamePanel();
@@ -47,7 +52,7 @@ public class GameMain {
         game.setGamePanel(gamePanel);
 
         // ボットの作成と開始
-        Bot botAI = new Bot(game, bot, player);
+        Bot botAI = new Bot(game, botPlayer, player, difficulty); // 難易度を渡す
         botAI.start();
 
         // JFrameの設定
@@ -58,6 +63,34 @@ public class GameMain {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    private static Difficulty selectDifficulty() {
+        String[] options = { "Easy", "Normal", "Hard" };
+        int choice = JOptionPane.showOptionDialog(
+                null,
+                "難易度を選択してください:",
+                "難易度選択",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]);
+
+        if (choice == JOptionPane.CLOSED_OPTION) {
+            return null; // 選択されなかった場合
+        }
+
+        switch (choice) {
+            case 0:
+                return Difficulty.EASY;
+            case 1:
+                return Difficulty.NORMAL;
+            case 2:
+                return Difficulty.HARD;
+            default:
+                return null;
+        }
     }
 
     private static void loadCustomFont() {
@@ -113,7 +146,7 @@ public class GameMain {
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
         titlePanel.setOpaque(false);
-        titlePanel.add(Box.createVerticalStrut(130)); 
+        titlePanel.add(Box.createVerticalStrut(130));
         titlePanel.add(titleLabel);
         titlePanel.add(Box.createVerticalStrut(10));
         backgroundPanel.add(titlePanel, BorderLayout.NORTH);
@@ -179,9 +212,11 @@ public class GameMain {
      */
     static class BackgroundPanel extends JPanel {
         private Image backgroundImage;
+
         public BackgroundPanel(Image image) {
             this.backgroundImage = image;
         }
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
