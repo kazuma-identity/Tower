@@ -11,12 +11,16 @@ public class Bot {
     private boolean isResourceBuildingBuilt = false;
     private Difficulty difficulty;
 
+    private int actionCounter = 0;
+
     public Bot(Game game, Player botPlayer, Player opponent, Difficulty difficulty) {
         this.game = game;
         this.botPlayer = botPlayer;
         this.opponent = opponent;
         this.random = new Random();
-        this.difficulty = difficulty; // 難易度をセット
+        this.difficulty = difficulty;
+
+        System.out.println("Botの難易度: " + difficulty);
     }
 
     public void start() {
@@ -26,7 +30,7 @@ public class Bot {
             public void run() {
                 performActions();
             }
-        }, 0, 5000); // 5秒ごとに行動
+        }, 0, 2000); // 2秒ごとに行動
     }
 
     private void performActions() {
@@ -38,61 +42,81 @@ public class Bot {
     }
 
     private void performEasyActions() {
-        summonUnits();
+        summonUnits(); // EASY はユニット召喚のみ
     }
 
     private void performNormalActions() {
-        summonUnits();
-        buildBuildings();
+        switch (actionCounter % 4) {
+            case 0 -> buildBuildings();
+            case 1, 2, 3 -> summonUnits();
+        }
+        actionCounter++;
     }
 
     private void performHardActions() {
-        summonUnits();
-        buildBuildings();
-        levelUpBuildingsAndUnits();
+        switch (actionCounter % 5) {
+            case 0 -> buildBuildings();
+            case 1, 2, 3 -> summonUnits();
+            case 4 -> levelUpBuildingsAndUnits();
+        }
+        actionCounter++;
     }
 
-    private void summonUnits() {
-        // 攻城ユニットの生成
-        if (botPlayer.getResources() >= 100) {
-            double x = botPlayer.getCastle().getX();
-            double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
-            SiegeUnit siegeUnit = new SiegeUnit(x, y, botPlayer, 1);
-            botPlayer.addUnit(siegeUnit);
-            game.addUnit(siegeUnit);
-            botPlayer.spendResources(100);
+    private boolean summonUnits() {
+        int choice = random.nextInt(3); // ランダムでユニットを選択
+        switch (choice) {
+            case 0 -> {
+                if (botPlayer.getResources() >= 100) {
+                    double x = botPlayer.getCastle().getX();
+                    double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+                    SiegeUnit siegeUnit = new SiegeUnit(x, y, botPlayer, 1);
+                    botPlayer.addUnit(siegeUnit);
+                    game.addUnit(siegeUnit);
+                    botPlayer.spendResources(100);
+                    System.out.println("Bot summoned SiegeUnit.");
+                    return true;
+                }
+            }
+            case 1 -> {
+                if (botPlayer.getResources() >= 100) {
+                    double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
+                    double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+                    MageUnit mageUnit = new MageUnit(x, y, botPlayer, 1);
+                    botPlayer.addUnit(mageUnit);
+                    game.addUnit(mageUnit);
+                    botPlayer.spendResources(100);
+                    System.out.println("Bot summoned MageUnit.");
+                    return true;
+                }
+            }
+            case 2 -> {
+                if (botPlayer.getResources() >= 50) {
+                    double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
+                    double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+                    ArcherUnit archerUnit = new ArcherUnit(x, y, botPlayer, 1);
+                    botPlayer.addUnit(archerUnit);
+                    game.addUnit(archerUnit);
+                    botPlayer.spendResources(50);
+                    System.out.println("Bot summoned ArcherUnit.");
+                    return true;
+                }
+            }
         }
-
-        // Mageユニットの生成
-        if (botPlayer.getResources() >= 50) {
-            double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
-            double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
-            MageUnit mageUnit = new MageUnit(x, y, botPlayer, 1);
-            botPlayer.addUnit(mageUnit);
-            game.addUnit(mageUnit);
-            botPlayer.spendResources(50);
-        }
-
-        // Archerユニットの生成
-        if (botPlayer.getResources() >= 50) {
-            double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
-            double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
-            ArcherUnit archerUnit = new ArcherUnit(x, y, botPlayer, 1);
-            botPlayer.addUnit(archerUnit);
-            game.addUnit(archerUnit);
-            botPlayer.spendResources(50);
-        }
+        return false;
     }
 
-    private void buildBuildings() {
+    private boolean buildBuildings() {
         if (botPlayer.getResources() >= 100 && !isResourceBuildingBuilt) {
             double x = botPlayer.getCastle().getX() + 75;
             double y = botPlayer.getCastle().getY() + random.nextInt(200) - 100;
 
             ResourceBuilding resourceBuilding = new ResourceBuilding(x, y, botPlayer);
             botPlayer.addBuilding(resourceBuilding);
+            game.addBuilding(resourceBuilding);
             botPlayer.spendResources(100);
             isResourceBuildingBuilt = true;
+            System.out.println("Bot built ResourceBuilding.");
+            return true;
         }
 
         if (botPlayer.getResources() >= 100) {
@@ -101,24 +125,40 @@ public class Bot {
 
             DefenseBuilding defenseBuilding = new DefenseBuilding(x, y, botPlayer);
             botPlayer.addBuilding(defenseBuilding);
+            game.addBuilding(defenseBuilding);
             botPlayer.spendResources(100);
+            System.out.println("Bot built DefenseBuilding.");
+            return true;
         }
+
+        return false;
     }
 
-    private void levelUpBuildingsAndUnits() {
+    private boolean levelUpBuildingsAndUnits() {
         for (Building building : botPlayer.getBuildings()) {
-            if (building instanceof ResourceBuilding) {
-                int nextLevel = building.getLevel() + 1; // 次のレベルを計算
-                int upgradeCost = building.getCost() * nextLevel;
-                if (botPlayer.spendResources(upgradeCost)) {
-                    building.levelUp(nextLevel); // 適切なレベルを渡す
-                }
+            int nextLevel = building.getLevel() + 1;
+            int upgradeCost = building.getCost() * nextLevel;
+            if (botPlayer.spendResources(upgradeCost)) {
+                building.levelUp(nextLevel);
+                System.out.println("Bot leveled up building to level " + nextLevel);
+                return true;
             }
         }
 
-        botPlayer.levelUpUnits(UnitType.ARCHER);
-        botPlayer.levelUpUnits(UnitType.MAGE);
-        botPlayer.levelUpUnits(UnitType.SIEGE);
+        if (botPlayer.levelUpUnits(UnitType.ARCHER)) {
+            System.out.println("Bot leveled up Archer units.");
+            return true;
+        }
+        if (botPlayer.levelUpUnits(UnitType.MAGE)) {
+            System.out.println("Bot leveled up Mage units.");
+            return true;
+        }
+        if (botPlayer.levelUpUnits(UnitType.SIEGE)) {
+            System.out.println("Bot leveled up Siege units.");
+            return true;
+        }
+
+        return false;
     }
 
     public void stop() {

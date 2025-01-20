@@ -9,6 +9,10 @@ public class GameMain {
     // ウィンドウを再利用するため static で持つ
     public static JFrame frame;
 
+    // デフォルトは EASY
+    private static Difficulty difficulty = Difficulty.EASY;
+    private static Object[] selectedDifficulty = { Difficulty.EASY };
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             loadCustomFont();
@@ -21,16 +25,13 @@ public class GameMain {
      * ここを再度呼び出すことで「リトライ」時に新しいゲームを始められます。
      */
     public static void startGame() {
-        // 難易度選択
-        Difficulty difficulty = selectDifficulty();
-        if (difficulty == null) {
-            System.exit(0); // 選択されなかった場合、ゲームを終了
-        }
+        // 最終的に選択された難易度を表示
+        System.out.println("最終的に選択された難易度: " + difficulty);
 
         // プレイヤー名入力用のカスタムダイアログ
         String playerName = showCustomInputDialog();
         if (playerName == null || playerName.trim().isEmpty()) {
-            System.exit(0);
+            System.exit(0); // 未入力の場合は終了
         }
 
         // プレイヤーとボットの作成
@@ -51,8 +52,8 @@ public class GameMain {
         gamePanel.setGame(game);
         game.setGamePanel(gamePanel);
 
-        // ボットの作成と開始
-        Bot botAI = new Bot(game, botPlayer, player, difficulty); // 難易度を渡す
+        // ボットの作成と開始 (difficultyを直接使用)
+        Bot botAI = new Bot(game, botPlayer, player, difficulty);
         botAI.start();
 
         // JFrameの設定
@@ -65,71 +66,32 @@ public class GameMain {
         frame.setVisible(true);
     }
 
-    private static Difficulty selectDifficulty() {
-        String[] options = { "Easy", "Normal", "Hard" };
-        int choice = JOptionPane.showOptionDialog(
-                null,
-                "難易度を選択してください:",
-                "難易度選択",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]);
-
-        if (choice == JOptionPane.CLOSED_OPTION) {
-            return null; // 選択されなかった場合
-        }
-
-        switch (choice) {
-            case 0:
-                return Difficulty.EASY;
-            case 1:
-                return Difficulty.NORMAL;
-            case 2:
-                return Difficulty.HARD;
-            default:
-                return null;
-        }
-    }
-
     private static void loadCustomFont() {
         try {
             File fontFile = new File("Battle Tough.otf");
             Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            // フォントサイズ等を変更
             customFont = baseFont.deriveFont(24f);
 
-            // GraphicsEnvironment に登録 (任意)
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            // 読み込みに失敗した場合、fallbackフォントを設定
-            customFont = new Font("SansSerif", Font.PLAIN, 18);
-        } catch (Exception e) {
+        } catch (IOException | FontFormatException e) {
             e.printStackTrace();
             customFont = new Font("SansSerif", Font.PLAIN, 18);
         }
     }
 
-    /**
-     * プレイヤー名入力用のカスタムダイアログ
-     */
     private static String showCustomInputDialog() {
-        // ダイアログの作成
         JDialog dialog = new JDialog((Frame) null, "Tower Defense Game", true);
         dialog.setSize(1000, 700);
         dialog.setLocationRelativeTo(null);
 
-        // === 背景用のパネルを用意し、ダイアログの contentPane にする ===
-        ImageIcon bgIcon = new ImageIcon("TitleBackground.jpg"); // 背景画像ファイル
+        // 背景用のパネル
+        ImageIcon bgIcon = new ImageIcon("TitleBackground.jpg");
         BackgroundPanel backgroundPanel = new BackgroundPanel(bgIcon.getImage());
         backgroundPanel.setLayout(new BorderLayout());
         dialog.setContentPane(backgroundPanel);
 
-        // === タイトル部分 ===
+        // タイトル
         JLabel titleLabel = new JLabel("TOWER DEFENSE GAME");
         if (customFont != null) {
             titleLabel.setFont(customFont.deriveFont(Font.BOLD, 64f));
@@ -151,7 +113,7 @@ public class GameMain {
         titlePanel.add(Box.createVerticalStrut(10));
         backgroundPanel.add(titlePanel, BorderLayout.NORTH);
 
-        // === 中央の入力パネル ===
+        // 中央の入力パネル
         JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -164,7 +126,7 @@ public class GameMain {
         messageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
         messageLabel.setFont(new Font("Dialog", Font.BOLD, 32));
 
-        centerPanel.add(Box.createVerticalStrut(100));
+        centerPanel.add(Box.createVerticalStrut(50));
         centerPanel.add(messageLabel);
         centerPanel.add(Box.createVerticalStrut(10));
 
@@ -173,9 +135,56 @@ public class GameMain {
         textField.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(textField);
 
+        // 難易度選択ボタン
+        JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        difficultyPanel.setOpaque(false);
+
+        JButton easyButton = new JButton("Easy");
+        JButton normalButton = new JButton("Normal");
+        JButton hardButton = new JButton("Hard");
+
+        // ボタンの初期色
+        Color defaultColor = easyButton.getBackground();
+        Color selectedColor = Color.YELLOW;
+
+        easyButton.addActionListener(e -> {
+            selectedDifficulty[0] = Difficulty.EASY;
+            difficulty = Difficulty.EASY; // ★ ボタンが押されるたびに更新
+            System.out.println("Easyが選択されました。現在のselectedDifficulty: " + selectedDifficulty[0]);
+            easyButton.setBackground(selectedColor);
+            normalButton.setBackground(defaultColor);
+            hardButton.setBackground(defaultColor);
+        });
+
+        normalButton.addActionListener(e -> {
+            selectedDifficulty[0] = Difficulty.NORMAL;
+            difficulty = Difficulty.NORMAL; // ★ ボタンが押されるたびに更新
+            System.out.println("Normalが選択されました。現在のselectedDifficulty: " + selectedDifficulty[0]);
+            easyButton.setBackground(defaultColor);
+            normalButton.setBackground(selectedColor);
+            hardButton.setBackground(defaultColor);
+        });
+
+        hardButton.addActionListener(e -> {
+            selectedDifficulty[0] = Difficulty.HARD;
+            difficulty = Difficulty.HARD; // ★ ボタンが押されるたびに更新
+            System.out.println("Hardが選択されました。現在のselectedDifficulty: " + selectedDifficulty[0]);
+            easyButton.setBackground(defaultColor);
+            normalButton.setBackground(defaultColor);
+            hardButton.setBackground(selectedColor);
+        });
+
+        difficultyPanel.add(easyButton);
+        difficultyPanel.add(normalButton);
+        difficultyPanel.add(hardButton);
+
+        centerPanel.add(Box.createVerticalStrut(20));
+        centerPanel.add(new JLabel("難易度を選択してください:"));
+        centerPanel.add(difficultyPanel);
+
         backgroundPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // === 下部のボタンパネル ===
+        // 下部のボタン
         JButton okButton = new JButton("スタート");
         JButton cancelButton = new JButton("ゲーム終了");
 
@@ -184,7 +193,6 @@ public class GameMain {
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
 
-        // ボタンパネルをさらに BoxLayout で包んで下部余白
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
@@ -196,6 +204,7 @@ public class GameMain {
         final String[] result = { null };
         okButton.addActionListener(e -> {
             result[0] = textField.getText().trim();
+            System.out.println("OKボタンが押されました。最終的なdifficulty: " + difficulty);
             dialog.dispose();
         });
         cancelButton.addActionListener(e -> {
@@ -207,9 +216,6 @@ public class GameMain {
         return result[0];
     }
 
-    /**
-     * 背景画像を描画するパネル
-     */
     static class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 
@@ -220,7 +226,6 @@ public class GameMain {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            // パネルの大きさに合わせて背景を拡大/縮小して描画
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
