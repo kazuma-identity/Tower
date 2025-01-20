@@ -58,9 +58,9 @@ public class Player {
 
 
     // ボットのためのメソッド
-    public void upgradeBuilding(Building building) {
-        if (building != null) {
-            building.levelUp();
-        }
-    }
+//    public void upgradeBuilding(Building building) {
+//        if (building != null) {
+//            building.levelUp();
+//        }
+//    }
 }

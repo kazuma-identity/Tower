@@ -70,14 +70,15 @@ public class Bot {
         }
 
         // 資源生成建物のアップグレード
-        for (Building building : botPlayer.getBuildings()) {
-            if (building instanceof ResourceBuilding) {
-                int upgradeCost = building.getCost() * building.getLevel();
-                if (botPlayer.spendResources(upgradeCost)) {
-                    building.levelUp();
-                }
-            }
-        }
+//        for (Building building : botPlayer.getBuildings()) {
+//            if (building instanceof ResourceBuilding) {
+//                int upgradeCost = building.getCost() * building.getLevel();
+//                if (botPlayer.spendResources(upgradeCost)) {
+//                    ResourceBuilding Rbuilding = building;
+//                    Rbuilding.levelUp();
+//                }
+//            }
+//        }
     }
 
     public void stop() {
