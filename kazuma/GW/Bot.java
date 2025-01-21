@@ -66,37 +66,37 @@ public class Bot {
         int choice = random.nextInt(3); // ランダムでユニットを選択
         switch (choice) {
             case 0 -> {
-                if (botPlayer.getResources() >= 80) {
-                    double x = botPlayer.getCastle().getX();
-                    double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+                if (botPlayer.getResources() >= 50) {
+                    double x = botPlayer.getCastle().getX() + random.nextInt(100);
+                    double y = botPlayer.getCastle().getY() + random.nextInt(100);
                     SiegeUnit siegeUnit = new SiegeUnit(x, y, botPlayer, 1);
                     botPlayer.addUnit(siegeUnit);
                     game.addUnit(siegeUnit);
-                    botPlayer.spendResources(80);
+                    botPlayer.spendResources(50);
                     System.out.println("Bot summoned SiegeUnit.");
                     return true;
                 }
             }
             case 1 -> {
-                if (botPlayer.getResources() >= 80) {
-                    double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
-                    double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+                if (botPlayer.getResources() >= 75) {
+                    double x = botPlayer.getCastle().getX() + random.nextInt(100);
+                    double y = botPlayer.getCastle().getY() + random.nextInt(100);
                     MageUnit mageUnit = new MageUnit(x, y, botPlayer, 1);
                     botPlayer.addUnit(mageUnit);
                     game.addUnit(mageUnit);
-                    botPlayer.spendResources(80);
+                    botPlayer.spendResources(75);
                     System.out.println("Bot summoned MageUnit.");
                     return true;
                 }
             }
             case 2 -> {
-                if (botPlayer.getResources() >= 40) {
-                    double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
-                    double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+                if (botPlayer.getResources() >= 25) {
+                    double x = botPlayer.getCastle().getX() + random.nextInt(100);
+                    double y = botPlayer.getCastle().getY() + random.nextInt(100);
                     ArcherUnit archerUnit = new ArcherUnit(x, y, botPlayer, 1);
                     botPlayer.addUnit(archerUnit);
                     game.addUnit(archerUnit);
-                    botPlayer.spendResources(40);
+                    botPlayer.spendResources(25);
                     System.out.println("Bot summoned ArcherUnit.");
                     return true;
                 }
@@ -106,27 +106,27 @@ public class Bot {
     }
 
     private boolean buildBuildings() {
-        if (botPlayer.getResources() >= 80 && !isResourceBuildingBuilt) {
-            double x = botPlayer.getCastle().getX() + 75;
-            double y = botPlayer.getCastle().getY() + random.nextInt(200) - 100;
+        if (botPlayer.getResources() >= 75 && !isResourceBuildingBuilt) {
+            double x = botPlayer.getCastle().getX() + random.nextInt(50);
+            double y = botPlayer.getCastle().getY() + random.nextInt(100);
 
             ResourceBuilding resourceBuilding = new ResourceBuilding(x, y, botPlayer);
             botPlayer.addBuilding(resourceBuilding);
             game.addBuilding(resourceBuilding);
-            botPlayer.spendResources(80);
+            botPlayer.spendResources(75);
             isResourceBuildingBuilt = true;
             System.out.println("Bot built ResourceBuilding.");
             return true;
         }
 
-        if (botPlayer.getResources() >= 80) {
-            double x = botPlayer.getCastle().getX() + random.nextInt(100) - 50;
-            double y = botPlayer.getCastle().getY() + random.nextInt(100) - 50;
+        if (botPlayer.getResources() >= 150) {
+            double x = botPlayer.getCastle().getX() + random.nextInt(50);
+            double y = botPlayer.getCastle().getY() + random.nextInt(100);
 
             DefenseBuilding defenseBuilding = new DefenseBuilding(x, y, botPlayer);
             botPlayer.addBuilding(defenseBuilding);
             game.addBuilding(defenseBuilding);
-            botPlayer.spendResources(80);
+            botPlayer.spendResources(150);
             System.out.println("Bot built DefenseBuilding.");
             return true;
         }

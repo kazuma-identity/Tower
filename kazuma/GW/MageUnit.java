@@ -36,8 +36,8 @@ public class MageUnit extends Unit {
         }
         while (this.level < targetLevel) {
             this.level++;
-            this.MaxHealth += 100;
-            this.attackPower += 20;
+            this.MaxHealth += 20;
+            this.attackPower += 10;
 
             System.out.println("ユニットがレベル " + this.level
                     + " に上がりました！ HP: " + this.MaxHealth

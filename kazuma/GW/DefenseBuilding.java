@@ -13,7 +13,7 @@ public class DefenseBuilding extends Building {
     private Unit target = null; // 攻撃対象
 
     public DefenseBuilding(double x, double y, Player owner) {
-        super(x, y, 100, 400.0, BuildingType.DEFENSE, owner);
+        super(x, y, 150, 400.0, BuildingType.DEFENSE, owner);
         this.attackPower = 1;
         this.timeSinceLastAttack = 0;
     }
@@ -30,7 +30,7 @@ public class DefenseBuilding extends Building {
             while (this.level < targetLevel) {
                 this.level++;
                 // 一律の計算式
-                this.MaxHealth += 200;
+                this.MaxHealth += 100;
                 this.health += 100;
                 System.out.println("Buildingレベルが " + this.level + " になりました");
             }
