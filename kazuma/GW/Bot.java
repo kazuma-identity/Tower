@@ -119,14 +119,14 @@ public class Bot {
             return true;
         }
 
-        if (botPlayer.getResources() >= 150) {
+        if (botPlayer.getResources() >= 100) {
             double x = botPlayer.getCastle().getX() + random.nextInt(50);
             double y = botPlayer.getCastle().getY() + random.nextInt(100);
 
             DefenseBuilding defenseBuilding = new DefenseBuilding(x, y, botPlayer);
             botPlayer.addBuilding(defenseBuilding);
             game.addBuilding(defenseBuilding);
-            botPlayer.spendResources(150);
+            botPlayer.spendResources(100);
             System.out.println("Bot built DefenseBuilding.");
             return true;
         }
