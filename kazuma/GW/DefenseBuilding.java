@@ -109,15 +109,6 @@ public class DefenseBuilding extends Building {
         int hpBarWidth = (int) ((health / MaxHealth) * 30);
         g.fillRect((int) x - 14, (int) y - 22, hpBarWidth, 3);
 
-        // クールダウンバーの描画
-        g.setColor(Color.BLACK);
-        g.fillRect((int) x - 14, (int) y - 16, 30, 3);
-        g.setColor(new Color(157, 204, 224));
-        int cdBarWidth = (int) ((timeSinceLastAttack / attackCooldown) * 30);
-        if (timeSinceLastAttack >= attackCooldown) {
-            cdBarWidth = 30;
-        }
-        g.fillRect((int) x - 14, (int) y - 16, cdBarWidth, 3);
     }
 
     // 攻撃可能範囲の描画
