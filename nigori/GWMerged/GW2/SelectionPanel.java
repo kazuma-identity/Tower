@@ -17,10 +17,10 @@ public class SelectionPanel extends JPanel {
 
         // 建物ボタンの作成と追加
         add(createBuildingButton("資源設備", "BuildResource", "resourcebuilding.png", 100));
-        add(createBuildingButton("防衛設備", "BuildDefense", "defensebuilding.png", 100));
+        add(createBuildingButton("防衛設備", "BuildDefense", "defensebuilding.png", 150));
 
         // ユニットボタンの作成と追加
-        add(createUnitButton("攻城ユニット", "DeploySiege", "Playersiegeunit.png", 100));
+        add(createUnitButton("攻城ユニット", "DeploySiege", "Playersiegeunit.png", 75));
         add(createUnitButton("Mageユニット", "DeployMage", "Playermageunit.png", 100));
         add(createUnitButton("Archerユニット", "DeployArcher", "Playerarcherunit.png", 50));
 

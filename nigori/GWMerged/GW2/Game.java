@@ -10,7 +10,7 @@ public class Game {
     private GamePanel gamePanel;
 
     // 基礎資源生成速度（資源/秒）
-    private final double baseResourceRate = 10.0;
+    private final double baseResourceRate = 15.0;
 
     public Game() {
         units = new ArrayList<>();
@@ -19,48 +19,96 @@ public class Game {
     }
 
     // ゲッターとセッター
-    public Player getPlayer() { return player; }
-    public Player getBot() { return bot; }
-    public List<Unit> getUnits() { return units; }
-    public List<Building> getBuildings() { return buildings; }
-    public List<Projectile> getProjectiles() { return projectiles; }
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Player getBot() {
+        return bot;
+    }
+
+    public List<Unit> getUnits() {
+        return units;
+    }
+
+    public List<Building> getBuildings() {
+        return buildings;
+    }
+
+    public List<Projectile> getProjectiles() {
+        return projectiles;
+    }
+
     public Player getOpponent(Player me) {
-        if (me == player) { return bot; }
-        if (me == bot) { return player; }
+        if (me == player) {
+            return bot;
+        }
+        if (me == bot) {
+            return player;
+        }
         return null;
     }
+
     public Player getUnitOwner(Unit unit) {
-        if (player.getUnits().contains(unit)) { return player; }
-        if (bot.getUnits().contains(unit)) { return bot; }
+        if (player.getUnits().contains(unit)) {
+            return player;
+        }
+        if (bot.getUnits().contains(unit)) {
+            return bot;
+        }
         return null;
     }
+
     public Player getBuildingOwner(Building building) {
-        if (player.getBuildings().contains(building)) { return player; }
-        if (bot.getBuildings().contains(building)) { return bot; }
+        if (player.getBuildings().contains(building)) {
+            return player;
+        }
+        if (bot.getBuildings().contains(building)) {
+            return bot;
+        }
         return null;
     }
+
     public List<Player> getPlayers() {
         List<Player> players = new ArrayList<>();
         players.add(player);
         players.add(bot);
         return players;
     }
-    public void setGamePanel(GamePanel panel) { this.gamePanel = panel; }
+
+    public void setGamePanel(GamePanel panel) {
+        this.gamePanel = panel;
+    }
+
     public void setPlayers(Player player, Player bot) {
         this.player = player;
         this.bot = bot;
     }
 
+    public void addUnit(Unit unit) {
+        units.add(unit);
+    }
 
-    public void addUnit(Unit unit) { units.add(unit); }
-    public void removeUnit(Unit unit) { units.remove(unit); }
-    public void addBuilding(Building building) { buildings.add(building); }
-    public void removeBuilding(Building building) { buildings.remove(building); }
-    public void addProjectile(Projectile p) { projectiles.add(p); }
-    public void removeProjectile(Projectile p) { projectiles.remove(p); }
+    public void removeUnit(Unit unit) {
+        units.remove(unit);
+    }
 
-    
-  
+    public void addBuilding(Building building) {
+        buildings.add(building);
+    }
+
+    public void removeBuilding(Building building) {
+        buildings.remove(building);
+    }
+
+    public void addProjectile(Projectile p) {
+        projectiles.add(p);
+    }
+
+    public void removeProjectile(Projectile p) {
+        projectiles.remove(p);
+    }
+
     // 画面サイズに基づいてユニットが陣地内にいるか判定
     public boolean isWithinTerritory(Player player, double x, double y) {
         if (player.getCastle().getX() < 400) { // 左側プレイヤー
@@ -70,7 +118,6 @@ public class Game {
         }
     }
 
-
     public void update(double deltaTime) {
         // 基礎資源生成の更新
         player.addResources((baseResourceRate * deltaTime));
@@ -79,7 +126,7 @@ public class Game {
         // 建物の更新
         for (Building building : new ArrayList<>(buildings)) {
             building.update(deltaTime, this);
-            if(!building.isActive()) {
+            if (!building.isActive()) {
                 removeBuilding(building);
                 building.getOwner().removeBuilding(building);
             }

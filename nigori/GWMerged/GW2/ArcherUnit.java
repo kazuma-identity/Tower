@@ -7,7 +7,7 @@ import java.awt.Image;
 public class ArcherUnit extends Unit {
 
     private double attackRange = 300.0; // 攻撃範囲
-    private double attackPower; // 攻撃力
+    private double attackPower = 10; // 攻撃力
     private double attackCooldown = 3.0;
     private double timeSinceLastAttack;
     private double targetX, targetY;
@@ -38,9 +38,9 @@ public class ArcherUnit extends Unit {
             this.level++;
 
             // レベルが1上がるごとに HPを+100, 攻撃力を+20
-            this.MaxHealth += 100;
+            this.MaxHealth += 20;
             this.health = this.MaxHealth; // レベルアップ時に全回復する場合はこうする
-            this.attackPower += 20;
+            this.attackPower += 5;
 
             System.out.println("ユニットがレベル " + this.level
                     + " に上がりました！ HP: " + this.MaxHealth

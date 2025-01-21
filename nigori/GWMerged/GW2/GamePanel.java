@@ -21,6 +21,8 @@ public class GamePanel extends JPanel {
   private Image PlayerArcherunitImage; // Archerユニットの画像
   private Image BotArcherunitImage; // Archerユニットの画像
   private Image PlayerMageunitImage; // Mageユニットの画像
+  private Image PlayerMageunitLV2Image; // MageLV.2ユニットの画像
+  private Image PlayerMageunitLV3Image; // MageLV.3ユニットの画像
   private Image BotMageunitImage; // Mageユニットの画像
   private Image TerritoryImage; // 領土の画像
 
@@ -37,6 +39,8 @@ public class GamePanel extends JPanel {
     PlayerArcherunitImage = new ImageIcon("Playerarcherunit.png").getImage();
     BotArcherunitImage = new ImageIcon("Botarcherunit.png").getImage();
     PlayerMageunitImage = new ImageIcon("Playermageunit.png").getImage();
+    PlayerMageunitLV2Image = new ImageIcon("PlayermageunitLV2.png").getImage();
+    PlayerMageunitLV3Image = new ImageIcon("PlayermageunitLV3.png").getImage();
     BotMageunitImage = new ImageIcon("Botmageunit.png").getImage();
     TerritoryImage = new ImageIcon("Territory.png").getImage();
 
@@ -141,7 +145,12 @@ public class GamePanel extends JPanel {
     if (player == null)
       return;
 
-    int cost = 100;
+    int cost = 0;
+    if (type == BuildingType.RESOURCE) {
+      cost = 100;
+    } else if (type == BuildingType.DEFENSE) {
+      cost = 150;
+    }
     if (player.getResources() >= cost) {
       player.spendResources(cost);
       Building building;
@@ -173,7 +182,14 @@ public class GamePanel extends JPanel {
     if (player == null)
       return;
 
-    int cost = (type == UnitType.ARCHER) ? 50 : 100;
+    int cost = 0;
+    if (type == UnitType.ARCHER) {
+      cost = 50;
+    } else if (type == UnitType.MAGE) {
+      cost = 100;
+    } else if (type == UnitType.SIEGE) {
+      cost = 75;
+    }
     if (player.getResources() >= cost) {
       player.spendResources(cost);
       Unit unit;
@@ -257,11 +273,17 @@ public class GamePanel extends JPanel {
             } else {
               unit.draw(g, PlayersiegeunitImage);
             }
-          } else {
+          } else if (unit instanceof MageUnit) {
             if (p.getName().equals("Bot")) {
               unit.draw(g, BotMageunitImage);
             } else {
-              unit.draw(g, PlayerMageunitImage);
+              if (unit.getLevel() == 1) {
+                unit.draw(g, PlayerMageunitImage);
+              } else if (unit.getLevel() == 2) {
+                unit.draw(g, PlayerMageunitLV2Image);
+              } else {
+                unit.draw(g, PlayerMageunitLV3Image);
+              }
             }
           }
         }

@@ -5,14 +5,14 @@ import java.awt.Image;
 
 public class SiegeUnit extends Unit {
 
-    private double attackPower; // 攻撃力
-    private double attackCooldown = 5.0; // 攻撃間隔（秒）
+    private double attackPower = 30; // 攻撃力
+    private double attackCooldown = 1.0; // 攻撃間隔（秒）
     private double timeSinceLastAttack;
     private double targetX, targetY;
     private int size = 30; // ユニットのサイズ
 
     public SiegeUnit(double x, double y, Player owner, int level) {
-        super(x, y, 50.0, 100, 300.0, UnitType.SIEGE, owner, level);
+        super(x, y, 50.0, 50, 150.0, UnitType.SIEGE, owner, level);
         // ユニットは種類ごとにレベルアップ（個々のユニットについてレベル処理はしない）
         levelUp(level);
         this.timeSinceLastAttack = 0;
@@ -20,12 +20,7 @@ public class SiegeUnit extends Unit {
 
     // レベルアップに必要なコスト
     public int getLevelUpCost(int tolevel) {
-        if (tolevel == 2)
-            return 300;
-        else if (tolevel == 3)
-            return 500;
-        else
-            return -1; // 不明な値が入力された場合
+        return -1;
     }
 
     // レベルアップ処理（HPと攻撃力が変化）
@@ -40,8 +35,8 @@ public class SiegeUnit extends Unit {
             this.level++;
 
             // レベルが1上がるごとに HPを+100, 攻撃力を+20
-            this.MaxHealth += 100;
-            this.attackPower += 20;
+            this.MaxHealth += 20;
+            this.attackPower += 10;
 
             System.out.println("ユニットがレベル " + this.level
                     + " に上がりました！ HP: " + this.MaxHealth
