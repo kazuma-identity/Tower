@@ -30,7 +30,7 @@ public class Bot {
             public void run() {
                 performActions();
             }
-        }, 0, 1000); // 2秒ごとに行動
+        }, 0, 500); // 2秒ごとに行動
     }
 
     private void performActions() {
@@ -55,8 +55,8 @@ public class Bot {
 
     private void performHardActions() {
         switch (actionCounter % 8) {
-            case 0 -> buildBuildings();
-            case 1, 2, 3, 4, 5, 6 -> summonUnits();
+            case 0, 4, 6 -> buildBuildings();
+            case 1, 2, 3, 5 -> summonUnits();
             case 7 -> levelUpBuildingsAndUnits();
         }
         actionCounter++;
