@@ -9,7 +9,7 @@ public class ResourceBuilding extends Building {
 
     public ResourceBuilding(double x, double y, Player owner) {
         super(x, y, 100, 200, BuildingType.RESOURCE, owner);
-        this.addResourceRate = 5.0; // 資源生成速度（1秒あたりの資源生成量）
+        this.addResourceRate = 2.5; // 資源生成速度（1秒あたりの資源生成量）
     }
 
     // レベルアップに必要なコスト
@@ -25,7 +25,7 @@ public class ResourceBuilding extends Building {
                 // 一律の計算式
                 this.MaxHealth += 200;
                 this.health += 100;
-                this.addResourceRate += 2.5;
+                this.addResourceRate += 1.25;
                 System.out.println("Buildingレベルが " + this.level + " になりました");
             }
         }
