@@ -142,6 +142,7 @@ public class GameMain {
         JButton easyButton = new JButton("Easy");
         JButton normalButton = new JButton("Normal");
         JButton hardButton = new JButton("Hard");
+        centerPanel.add(difficultyPanel);
 
         // ボタンの初期色
         Color defaultColor = easyButton.getBackground();
