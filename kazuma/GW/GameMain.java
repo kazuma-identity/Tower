@@ -57,7 +57,7 @@ public class GameMain {
         botAI.start();
 
         // JFrameの設定
-        frame = new JFrame("対戦型タワーディフェンスゲーム");
+        frame = new JFrame("FORTRESS CLASH");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(gamePanel);
         frame.setSize(1000, 700);
@@ -81,7 +81,7 @@ public class GameMain {
     }
 
     private static String showCustomInputDialog() {
-        JDialog dialog = new JDialog((Frame) null, "Tower Defense Game", true);
+        JDialog dialog = new JDialog((Frame) null, "FORTRESS CLASH", true);
         dialog.setSize(1000, 700);
         dialog.setLocationRelativeTo(null);
 
@@ -92,7 +92,7 @@ public class GameMain {
         dialog.setContentPane(backgroundPanel);
 
         // タイトル
-        JLabel titleLabel = new JLabel("TOWER DEFENSE GAME");
+        JLabel titleLabel = new JLabel("FORTRESS CLASH");
         if (customFont != null) {
             titleLabel.setFont(customFont.deriveFont(Font.BOLD, 64f));
         } else {
