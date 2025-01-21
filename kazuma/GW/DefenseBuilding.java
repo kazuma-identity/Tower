@@ -32,6 +32,7 @@ public class DefenseBuilding extends Building {
                 // 一律の計算式
                 this.MaxHealth += 100;
                 this.health += 100;
+                this.attackPower += 0.5;
                 System.out.println("Buildingレベルが " + this.level + " になりました");
             }
         }

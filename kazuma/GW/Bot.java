@@ -107,7 +107,7 @@ public class Bot {
 
     private boolean buildBuildings() {
         if (botPlayer.getResources() >= 60 && !isResourceBuildingBuilt) {
-            double x = botPlayer.getCastle().getX() + random.nextInt(50);
+            double x = botPlayer.getCastle().getX() + random.nextInt(100);
             double y = botPlayer.getCastle().getY() + random.nextInt(100);
 
             ResourceBuilding resourceBuilding = new ResourceBuilding(x, y, botPlayer);
@@ -120,7 +120,7 @@ public class Bot {
         }
 
         if (botPlayer.getResources() >= 75) {
-            double x = botPlayer.getCastle().getX() + random.nextInt(50);
+            double x = botPlayer.getCastle().getX() + random.nextInt(100);
             double y = botPlayer.getCastle().getY() + random.nextInt(100);
 
             DefenseBuilding defenseBuilding = new DefenseBuilding(x, y, botPlayer);
