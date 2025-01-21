@@ -141,7 +141,12 @@ public class GamePanel extends JPanel {
     if (player == null)
       return;
 
-    int cost = 100;
+    int cost = 0;
+    if (type == BuildingType.RESOURCE) {
+      cost = 100;
+    } else if (type == BuildingType.DEFENSE) {
+      cost = 150;
+    }
     if (player.getResources() >= cost) {
       player.spendResources(cost);
       Building building;
@@ -173,7 +178,14 @@ public class GamePanel extends JPanel {
     if (player == null)
       return;
 
-    int cost = (type == UnitType.ARCHER) ? 50 : 100;
+    int cost = 0;
+    if (type == UnitType.ARCHER) {
+      cost = 50;
+    } else if (type == UnitType.MAGE) {
+      cost = 100;
+    } else if (type == UnitType.SIEGE) {
+      cost = 75;
+    }
     if (player.getResources() >= cost) {
       player.spendResources(cost);
       Unit unit;

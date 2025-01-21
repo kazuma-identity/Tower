@@ -10,7 +10,7 @@ public class Game {
     private GamePanel gamePanel;
 
     // 基礎資源生成速度（資源/秒）
-    private final double baseResourceRate = 10.0;
+    private final double baseResourceRate = 20.0;
 
     public Game() {
         units = new ArrayList<>();
