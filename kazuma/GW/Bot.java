@@ -30,7 +30,7 @@ public class Bot {
             public void run() {
                 performActions();
             }
-        }, 0, 2000); // 2秒ごとに行動
+        }, 0, 1000); // 2秒ごとに行動
     }
 
     private void performActions() {
