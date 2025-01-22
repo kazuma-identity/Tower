@@ -45,11 +45,11 @@ public class ResourceBuilding extends Building {
         if (!active)
             return;
         // 資源設備の描画
-        g.drawImage(image, (int) x - 15, (int) y - 10, 32, 32, null);
+        g.drawImage(image, (int) x - 15, (int) y - 10, 48, 48, null);
 
         // レベル表示
         g.setColor(Color.WHITE);
-        g.drawString("Lv " + level, (int) x - 10, (int) y + 28);
+        g.drawString("Lv " + level, (int) x - 10, (int) y + 44);
 
         // HPバーの描画
         g.setColor(Color.RED);

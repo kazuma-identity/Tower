@@ -16,14 +16,26 @@ public class GamePanel extends JPanel {
   private Image castleImage; // 城の画像
   private Image defensebuildingImage; // 攻城ユニットの画像
   private Image resourcebuildingImage; // 資源設備の画像
+  private Image resourcebuildingLV2Image; // 資源設備LV.2の画像
+  private Image resourcebuildingLV3Image; // 資源設備LV.3の画像
   private Image PlayersiegeunitImage; // 攻城ユニットの画像
+  private Image PlayersiegeunitLV2Image; // 攻城ユニットLV.2の画像
+  private Image PlayersiegeunitLV3Image; // 攻城ユニットLV.3の画像
   private Image BotsiegeunitImage; // 攻城ユニットの画像
+  private Image BotsiegeunitLV2Image; // 攻城ユニットLV.2の画像
+  private Image BotsiegeunitLV3Image; // 攻城ユニットLV.3の画像
   private Image PlayerArcherunitImage; // Archerユニットの画像
+  private Image PlayerArcherunitLV2Image; // ArcherLV.2ユニットの画像
+  private Image PlayerArcherunitLV3Image; // ArcherLV.3ユニットの画像
   private Image BotArcherunitImage; // Archerユニットの画像
+  private Image BotArcherunitLV2Image; // ArcherLV.2ユニットの画像
+  private Image BotArcherunitLV3Image; // ArcherLV.3ユニットの画像
   private Image PlayerMageunitImage; // Mageユニットの画像
   private Image PlayerMageunitLV2Image; // MageLV.2ユニットの画像
   private Image PlayerMageunitLV3Image; // MageLV.3ユニットの画像
   private Image BotMageunitImage; // Mageユニットの画像
+  private Image BotMageunitLV2Image; // MageLV.2ユニットの画像
+  private Image BotMageunitLV3Image; // MageLV.3ユニットの画像
   private Image TerritoryImage; // 領土の画像
 
   public GamePanel() {
@@ -34,14 +46,26 @@ public class GamePanel extends JPanel {
     castleImage = new ImageIcon("castle.png").getImage();
     defensebuildingImage = new ImageIcon("defensebuilding.png").getImage();
     resourcebuildingImage = new ImageIcon("resourcebuilding.png").getImage();
+    resourcebuildingLV2Image = new ImageIcon("resourcebuildingLV2.png").getImage();
+    resourcebuildingLV3Image = new ImageIcon("resourcebuildingLV3.png").getImage();
     PlayersiegeunitImage = new ImageIcon("Playersiegeunit.png").getImage();
+    PlayersiegeunitLV2Image = new ImageIcon("PlayersiegeunitLV2.png").getImage();
+    PlayersiegeunitLV3Image = new ImageIcon("PlayersiegeunitLV3.png").getImage();
     BotsiegeunitImage = new ImageIcon("Botsiegeunit.png").getImage();
+    BotsiegeunitLV2Image = new ImageIcon("BotsiegeunitLV2.png").getImage();
+    BotsiegeunitLV3Image = new ImageIcon("BotsiegeunitLV3.png").getImage();
     PlayerArcherunitImage = new ImageIcon("Playerarcherunit.png").getImage();
+    PlayerArcherunitLV2Image = new ImageIcon("PlayerarcherunitLV2.png").getImage();
+    PlayerArcherunitLV3Image = new ImageIcon("PlayerarcherunitLV3.png").getImage();
     BotArcherunitImage = new ImageIcon("Botarcherunit.png").getImage();
+    BotArcherunitLV2Image = new ImageIcon("BotarcherunitLV2.png").getImage();
+    BotArcherunitLV3Image = new ImageIcon("BotarcherunitLV3.png").getImage();
     PlayerMageunitImage = new ImageIcon("Playermageunit.png").getImage();
     PlayerMageunitLV2Image = new ImageIcon("PlayermageunitLV2.png").getImage();
     PlayerMageunitLV3Image = new ImageIcon("PlayermageunitLV3.png").getImage();
     BotMageunitImage = new ImageIcon("Botmageunit.png").getImage();
+    BotMageunitLV2Image = new ImageIcon("BotmageunitLV2.png").getImage();
+    BotMageunitLV3Image = new ImageIcon("BotmageunitLV3.png").getImage();
     TerritoryImage = new ImageIcon("Territory.png").getImage();
 
     // SelectionPanelの追加
@@ -252,7 +276,13 @@ public class GamePanel extends JPanel {
       for (Player p : game.getPlayers()) {
         for (Building building : p.getBuildings()) {
           if (building instanceof ResourceBuilding) {
-            building.draw(g, resourcebuildingImage);
+            if (building.getLevel() == 1) {
+              building.draw(g, resourcebuildingImage);
+            } else if (building.getLevel() == 2) {
+              building.draw(g, resourcebuildingLV2Image);
+            } else {
+              building.draw(g, resourcebuildingLV3Image);
+            }
           } else {
             building.draw(g, defensebuildingImage);
           }
@@ -263,19 +293,49 @@ public class GamePanel extends JPanel {
         for (Unit unit : p.getUnits()) {
           if (unit instanceof ArcherUnit) {
             if (p.getName().equals("Bot")) {
-              unit.draw(g, BotArcherunitImage);
+              if (unit.getLevel() == 1) {
+                unit.draw(g, BotArcherunitImage);
+              } else if (unit.getLevel() == 2) {
+                unit.draw(g, BotArcherunitLV2Image);
+              } else {
+                unit.draw(g, BotArcherunitLV3Image);
+              }
             } else {
-              unit.draw(g, PlayerArcherunitImage);
+              if (unit.getLevel() == 1) {
+                unit.draw(g, PlayerArcherunitImage);
+              } else if (unit.getLevel() == 2) {
+                unit.draw(g, PlayerArcherunitLV2Image);
+              } else {
+                unit.draw(g, PlayerArcherunitLV3Image);
+              }
             }
           } else if (unit instanceof SiegeUnit) {
             if (p.getName().equals("Bot")) {
-              unit.draw(g, BotsiegeunitImage);
+              if (unit.getLevel() == 1) {
+                unit.draw(g, BotsiegeunitImage);
+              } else if (unit.getLevel() == 2) {
+                unit.draw(g, BotsiegeunitLV2Image);
+              } else {
+                unit.draw(g, BotsiegeunitLV3Image);
+              }
             } else {
-              unit.draw(g, PlayersiegeunitImage);
+              if (unit.getLevel() == 1) {
+                unit.draw(g, PlayersiegeunitImage);
+              } else if (unit.getLevel() == 2) {
+                unit.draw(g, PlayersiegeunitLV2Image);
+              } else {
+                unit.draw(g, PlayersiegeunitLV3Image);
+              }
             }
           } else if (unit instanceof MageUnit) {
             if (p.getName().equals("Bot")) {
-              unit.draw(g, BotMageunitImage);
+              if (unit.getLevel() == 1) {
+                unit.draw(g, BotMageunitImage);
+              } else if (unit.getLevel() == 2) {
+                unit.draw(g, BotMageunitLV2Image);
+              } else {
+                unit.draw(g, BotMageunitLV3Image);
+              }
             } else {
               if (unit.getLevel() == 1) {
                 unit.draw(g, PlayerMageunitImage);
