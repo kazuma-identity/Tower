@@ -30,9 +30,9 @@ public class Castle {
 
     // HPバーの描画
     g.setColor(Color.RED);
-    g.fillRect((int) x - size / 2, (int) y - size / 2 - 10, size, 5);
+    g.fillRect((int) x - size / 2, (int) y - size / 2, size, 5);
     g.setColor(Color.GREEN);
     int hpBarWidth = (int) ((health / MaxHealth) * size); 
-    g.fillRect((int) x - size / 2, (int) y - size / 2 - 10, hpBarWidth, 5);
+    g.fillRect((int) x - size / 2, (int) y - size / 2, hpBarWidth, 5);
   }
 }
