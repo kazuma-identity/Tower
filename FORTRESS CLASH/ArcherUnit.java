@@ -16,7 +16,6 @@ public class ArcherUnit extends Unit {
 
     public ArcherUnit(double x, double y, Player owner, int level) {
         super(x, y, 20.0, 50, 100.0, UnitType.MAGE, owner, level);
-        // ユニットは種類ごとにレベルアップ（個々のユニットについてレベル処理はしない）
         levelUp(level);
         this.timeSinceLastAttack = 0;
     }
@@ -36,10 +35,7 @@ public class ArcherUnit extends Unit {
         // 現在のレベルが targetLevel に達するまで繰り返す
         while (this.level < targetLevel) {
             this.level++;
-
-            // レベルが1上がるごとに HPを+100, 攻撃力を+20
             this.MaxHealth += 20;
-            this.health = this.MaxHealth; // レベルアップ時に全回復する場合はこうする
             this.attackPower += 5;
 
             System.out.println("ユニットがレベル " + this.level
