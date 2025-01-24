@@ -160,8 +160,8 @@ public class Player {
 
         // 現在の建物レベルを更新
         switch (type) {
-            case RESOURCE -> resourceBuildingLevel = maxLevel;
-            case DEFENSE -> defenseBuildingLevel = maxLevel;
+            case RESOURCE : resourceBuildingLevel = maxLevel;
+            case DEFENSE : defenseBuildingLevel = maxLevel;
         }
 
         return leveledUp;

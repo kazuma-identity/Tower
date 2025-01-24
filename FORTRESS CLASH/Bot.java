@@ -35,9 +35,15 @@ public class Bot {
 
     private void performActions() {
         switch (difficulty) {
-            case EASY -> performEasyActions();
-            case NORMAL -> performNormalActions();
-            case HARD -> performHardActions();
+            case EASY:
+                performEasyActions();
+                break;
+            case NORMAL:
+                performNormalActions();
+                break;
+            case HARD:
+                performHardActions();
+                break;
         }
     }
 
@@ -47,17 +53,34 @@ public class Bot {
 
     private void performNormalActions() {
         switch (actionCounter % 4) {
-            case 0 -> buildBuildings();
-            case 1, 2, 3 -> summonUnits();
+            case 0:
+                buildBuildings();
+                break;
+            case 1:
+            case 2:
+            case 3:
+                summonUnits();
+                break;
         }
         actionCounter++;
     }
 
     private void performHardActions() {
         switch (actionCounter % 8) {
-            case 0, 4, 6 -> buildBuildings();
-            case 1, 2, 3, 5 -> summonUnits();
-            case 7 -> levelUpBuildingsAndUnits();
+            case 0:
+            case 4:
+            case 6:
+                buildBuildings();
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 5:
+                summonUnits();
+                break;
+            case 7:
+                levelUpBuildingsAndUnits();
+                break;
         }
         actionCounter++;
     }
@@ -65,7 +88,7 @@ public class Bot {
     private boolean summonUnits() {
         int choice = random.nextInt(3); // ランダムでユニットを選択
         switch (choice) {
-            case 0 -> {
+            case 0:
                 if (botPlayer.getResources() >= 30) {
                     double x = botPlayer.getCastle().getX() + random.nextInt(100);
                     double y = botPlayer.getCastle().getY() + random.nextInt(100);
@@ -76,8 +99,8 @@ public class Bot {
                     System.out.println("Bot summoned SiegeUnit.");
                     return true;
                 }
-            }
-            case 1 -> {
+                break;
+            case 1:
                 if (botPlayer.getResources() >= 60) {
                     double x = botPlayer.getCastle().getX() + random.nextInt(100);
                     double y = botPlayer.getCastle().getY() + random.nextInt(100);
@@ -88,8 +111,8 @@ public class Bot {
                     System.out.println("Bot summoned MageUnit.");
                     return true;
                 }
-            }
-            case 2 -> {
+                break;
+            case 2:
                 if (botPlayer.getResources() >= 20) {
                     double x = botPlayer.getCastle().getX() + random.nextInt(100);
                     double y = botPlayer.getCastle().getY() + random.nextInt(100);
@@ -100,7 +123,7 @@ public class Bot {
                     System.out.println("Bot summoned ArcherUnit.");
                     return true;
                 }
-            }
+                break;
         }
         return false;
     }
